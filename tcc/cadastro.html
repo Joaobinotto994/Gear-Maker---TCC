@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - Pedalboard</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: 
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url(img/Como-Ligar-Pedaleira-ou_-Pedal-de-Guitarra-3-1024x538.png) no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .cadastro-box {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 40px;
+      border-radius: 10px;
+      width: 350px;
+      color: white;
+    }
+
+    .cadastro-box h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .cadastro-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 5px;
+      background: #333;
+      color: white;
+      font-size: 14px;
+    }
+
+    .cadastro-box input::placeholder {
+      color: #aaa;
+    }
+
+    .dupla {
+      display: flex;
+      gap: 10px;
+    }
+
+    .dupla input {
+      flex: 1;
+    }
+
+    .cadastro-box button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 5px;
+      background: #e50914;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .cadastro-box button:hover {
+      background: #f40612;
+    }
+
+    .cadastro-box p {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .cadastro-box a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .cadastro-box a:hover {
+      text-decoration: underline;
+    }
+
+    #mensagem {
+      color: #ffb3b3;
+      font-size: 14px;
+      min-height: 18px;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="cadastro-box">
+    <h2>Criar Conta</h2>
+
+    <form id="cadastroForm">
+      <input id="nomeInput" type="text" placeholder="Nome completo" required>
+      <input id="emailInput" type="email" placeholder="Email" required>
+      <input id="senhaInput" type="password" placeholder="Senha" required>
+
+      <div class="dupla">
+        <input id="telefoneInput" type="tel" placeholder="Telefone" required>
+        <input id="dataInput" type="date" required>
+      </div>
+
+      <button type="submit">Cadastrar</button>
+    </form>
+
+    <!-- mensagem de erro ou sucesso -->
+    <div id="mensagem"></div>
+
+    <p>Já tem uma conta? <a href="login.html">Entrar</a></p>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000'; // URL do backend
+
+    const form = document.getElementById('cadastroForm');
+    const msg = document.getElementById('mensagem');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // não recarrega a página
+
+      const nome = document.getElementById('nomeInput').value.trim();
+      const email = document.getElementById('emailInput').value.trim();
+      const senha = document.getElementById('senhaInput').value;
+      const telefone = document.getElementById('telefoneInput').value.trim();
+      const dataNascimento = document.getElementById('dataInput').value;
+
+      if (!nome || !email || !senha || !telefone || !dataNascimento) {
+        msg.style.color = '#ffb3b3';
+        msg.textContent = 'Preencha todos os campos.';
+        return;
+      }
+
+      msg.style.color = '#ffffff';
+      msg.textContent = 'Cadastrando...';
+
+      try {
+        const res = await fetch(API_BASE + '/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ nome, email, senha, telefone, dataNascimento })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          msg.style.color = '#ffb3b3';
+          msg.textContent = data.error || 'Erro ao cadastrar.';
+          return;
+        }
+
+        msg.style.color = '#b3ffb3';
+        msg.textContent = 'Cadastro efetuado com sucesso! Redirecionando para login...';
+
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1000);
+
+      } catch (err) {
+        console.error('Erro fetch:', err);
+        msg.style.color = '#ffb3b3';
+        msg.textContent = 'Erro de conexão com o servidor.';
+      }
+    });
+  </script>
+</body>
+</html>

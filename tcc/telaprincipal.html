@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BoardMaker - Início</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    /* Cabeçalho */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ff3333; /* vermelho */
+    }
+
+    header nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+    }
+
+    header input {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+    }
+
+    header .user {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #444;
+      cursor: pointer;
+      position: relative;
+    }
+
+    /* Menu de usuário */
+    .user-menu {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: #222;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+    }
+
+    .user-menu button {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* Hero */
+    .hero {
+      height: 250px;
+      background: url('/img/photo-1560849898-d058f7d93b23.jpg-1-1.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      margin-top: 60px;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #111 100%);
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      z-index: 2;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    }
+
+    /* Conteúdo */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    main h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+.card {
+    position: relative;
+    background: #1e1e1e;
+    border-radius: 12px;
+    padding: 2rem 1rem;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Expande e dá sombra ao passar o mouse */
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    z-index: 10; /* Fica acima dos outros cards */
+}
+
+/* Container dos botões */
+.card-buttons {
+    position: absolute;
+    bottom: -50px; /* começa escondido */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    opacity: 0;
+    transition: bottom 0.3s, opacity 0.3s;
+}
+
+/* Aparece quando passa o mouse */
+.card:hover .card-buttons {
+    bottom: 15px;
+    opacity: 1;
+}
+
+.card-buttons button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, #ff3333, #cc0000);
+    color: #fff;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.card-buttons button:hover {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #ff6666, #ff0000);
+}
+
+    .card h4 {
+      font-size: 1.1rem;
+      color: #ddd;
+    }
+
+    /* Botão novo board */
+    .novo-board {
+      margin: 2rem auto 0;
+      display: block;
+      padding: 0.8rem 1.6rem;
+      background: linear-gradient(135deg, #ff3333, #cc0000);
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .novo-board:hover {
+      transform: scale(1.05);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .hero h2 {
+        font-size: 1.4rem;
+        padding: 0 1rem;
+      }
+      header nav {
+        gap: 0.5rem;
+      }
+      .novo-board {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header>
+    <h1>BoardMaker</h1>
+    <nav>
+      <input type="text" id="searchInput" placeholder="Pesquisar pedalboards...">
+      <div class="user" id="userBtn"></div>
+      <div class="user-menu" id="userMenu">
+        <button id="logoutBtn">Logout</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h2 id="welcome">Bem-vindo!</h2>
+  </section>
+
+  <!-- Conteúdo -->
+  <main>
+    <h3>Aqui estão os seus PedalBoards!!</h3>
+
+    <div class="grid" id="pedalboardGrid">
+      <!-- Os pedalboards do usuário vão aparecer aqui -->
+    </div>
+
+    <button class="novo-board" id="createBoard">Criar novo Board</button>
+  </main>
+
+<script>
+  // Pega token e nome do usuário do localStorage
+  const token = localStorage.getItem("token");
+  const userName = localStorage.getItem("userName");
+  const welcome = document.getElementById("welcome");
+  const pedalboardGrid = document.getElementById("pedalboardGrid");
+
+  // Mostra o nome do usuário
+  if (userName) {
+    welcome.textContent = `Bem-vindo, ${userName}`;
+  }
+
+function criarCard(board) {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+        <h4>${board.nome}${board.usuario?.nome ? ` <small>(de ${board.usuario.nome})</small>` : ""}</h4>
+        <div class="card-buttons">
+            <button class="ver-btn">Ver</button>
+            <button class="editar-btn">Editar</button>
+            <button class="excluir-btn">Excluir</button>
+        </div>
+    `;
+
+    pedalboardGrid.appendChild(card);
+
+    // Botão Ver
+    card.querySelector(".ver-btn").addEventListener("click", () => {
+        alert("Implementar visualização do pedalboard");
+    });
+
+    // Botão Editar → redireciona para tela de pedais
+    card.querySelector(".editar-btn").addEventListener("click", () => {
+        window.location.href = `teladepedais.html?id=${board._id}`;
+    });
+
+// Botão Excluir → chama API DELETE
+card.querySelector(".excluir-btn").addEventListener("click", async () => {
+    if (!confirm(`Deseja realmente excluir o pedalboard "${board.nome}"?`)) return;
+
+    try {
+        const res = await fetch(`http://localhost:3000/pedalboards/${board._id}`, {
+            method: "DELETE",
+            headers: { 
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (res.ok) {
+            alert("Pedalboard excluído com sucesso!");
+            card.remove(); // remove o card direto da tela
+            // carregarMeusBoards();  // se preferir recarregar toda a lista, pode deixar essa linha
+        } else {
+            const errData = await res.json();
+            alert("Erro ao excluir: " + (errData.error || "Desconhecido"));
+        }
+    } catch (err) {
+        console.error("Erro ao excluir pedalboard:", err);
+        alert("Erro ao excluir pedalboard");
+    }
+});
+}
+  // Carrega pedalboards do usuário logado
+  async function carregarMeusBoards() {
+    try {
+      const res = await fetch("http://localhost:3000/meus-pedalboards", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      
+      pedalboardGrid.innerHTML = "";
+      if (data.pedalboards && data.pedalboards.length > 0) {
+        data.pedalboards.forEach(criarCard);
+      } else {
+        pedalboardGrid.innerHTML = "<p style='text-align:center;color:#aaa'>Você ainda não tem nenhum pedalboard.</p>";
+      }
+    } catch (err) {
+      console.error("Erro ao carregar pedalboards:", err);
+      pedalboardGrid.innerHTML = "<p style='text-align:center;color:#ff3333'>Erro ao carregar seus pedalboards.</p>";
+    }
+  }
+
+  carregarMeusBoards();
+
+  // Pesquisa pedalboards de todos os usuários
+  document.getElementById("searchInput").addEventListener("input", async (e) => {
+    const query = e.target.value;
+    if (query.length < 2) return; // só pesquisa se tiver 2+ caracteres
+
+    try {
+      const res = await fetch(`http://localhost:3000/pedalboards/search?q=${query}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      pedalboardGrid.innerHTML = "";
+      if (data && data.length > 0) {
+        data.forEach(criarCard);
+      } else {
+        pedalboardGrid.innerHTML = "<p style='text-align:center;color:#aaa'>Nenhum resultado encontrado.</p>";
+      }
+    } catch (err) {
+      console.error("Erro na pesquisa:", err);
+      pedalboardGrid.innerHTML = "<p style='text-align:center;color:#ff3333'>Erro ao pesquisar pedalboards.</p>";
+    }
+  });
+
+  // Menu do usuário
+  const userBtn = document.getElementById("userBtn");
+  const userMenu = document.getElementById("userMenu");
+  userBtn.addEventListener("click", () => {
+    userMenu.style.display = userMenu.style.display === "block" ? "none" : "block";
+  });
+
+  // Logout
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    window.location.href = "login.html";
+  });
+
+  // Criar novo pedalboard → leva para tela de criação com parâmetro
+  document.getElementById("createBoard").addEventListener("click", () => {
+    window.location.href = "teladepedais.html?novoBoard=true";
+  });
+</script>
+
+</body>
+</html>

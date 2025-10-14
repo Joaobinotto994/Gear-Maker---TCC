@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Pedalboard</title>
+  <style>
+    /* --- seu CSS aqui (mantive o original) --- */
+    body { 
+      margin: 0; 
+      font-family: Arial, Helvetica, sans-serif; 
+      background: url("img/photo-1560849898-d058f7d93b23.jpg-1-1.jpg") no-repeat center center/cover; height: 100vh;
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+    }
+    .overlay { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.6); 
+    }
+    header { 
+      width: 100%; 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      padding: 20px 40px; 
+      z-index: 10; 
+    }
+    .logo { 
+      font-size: 28px;
+      font-weight: bold; 
+      color: #e50914; 
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      text-decoration: none; 
+    }
+    .login-box { 
+      position: relative; 
+      background: rgba(0,0,0,0.75); 
+      padding: 4rem; 
+      border-radius: 4px; 
+      width: 350px; 
+      z-index: 2; 
+      color: white; 
+      margin-top: 60px; 
+    }
+    .login-box h1 { 
+      margin: 0 0 28px 0; 
+      font-size: 32px; 
+      font-weight: bold; 
+      text-align: center; 
+    }
+    .input-box { 
+      margin-bottom: 16px; 
+    }
+    .input-box input {
+      width: 100%; 
+      padding: 14px; 
+      border-radius: 4px; 
+      border: none; 
+      outline: none; 
+      font-size: 16px; 
+      background: #333; 
+      color: white; 
+    }
+    .login-btn { 
+      width: 100%; 
+      padding: 14px; 
+      background: #e50914; 
+      border: none; 
+      border-radius: 4px; 
+      font-size: 16px; 
+      color: white; 
+      font-weight: bold; 
+      cursor: pointer; 
+      margin: 24px 0 12px; 
+    }
+    .options { 
+      display: flex; 
+      justify-content: space-between; 
+      font-size: 13px; 
+      color: #b3b3b3; 
+    }
+    .signup { 
+      text-align: center; 
+      margin-top: 40px; 
+      font-size: 14px; 
+      color: #737373; 
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <header>
+    <a href="teleinicial.html" class="logo">BoardMaker</a>
+  </header>
+
+  <div class="login-box">
+    <h1>Entrar</h1>
+
+    <!-- note: id no form para pegar com JS -->
+    <form id="loginForm" action="#" method="POST">
+      <div class="input-box">
+        <!-- ids para facilitar o JS -->
+        <input id="emailInput" type="email" name="email" placeholder="Email ou número de celular" required />
+      </div>
+      <div class="input-box">
+        <input id="senhaInput" type="password" name="senha" placeholder="Senha" required />
+      </div>
+
+      <!-- lugar para mostrar mensagens de erro/sucesso -->
+      <div id="mensagem" style="color: #ffb3b3; font-size:14px; min-height:18px; margin-bottom:8px"></div>
+
+      <button type="submit" class="login-btn">Entrar</button>
+
+      <div class="options">
+        <label><input type="checkbox" /> Lembre-se de mim</label>
+        <a href="#">Esqueceu a senha?</a>
+      </div>
+    </form>
+
+    <div class="signup">
+      Primeira vez aqui? <a href="cadastro.html">Cadastre-se agora!!</a>.
+    </div>
+  </div>
+
+  <!-- SCRIPT: liga com backend -->
+  <script>
+    // URL base do seu backend
+    const API_BASE = 'http://localhost:3000';
+
+    const form = document.getElementById('loginForm');
+    const msg = document.getElementById('mensagem');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // não deixa a página recarregar
+
+      // pegar valores
+      const email = document.getElementById('emailInput').value.trim();
+      const senha = document.getElementById('senhaInput').value;
+
+      // validação mínima
+      if (!email || !senha) {
+        msg.style.color = '#ffb3b3';
+        msg.textContent = 'Preencha email e senha.';
+        return;
+      }
+
+      msg.style.color = '#ffffff';
+      msg.textContent = 'Entrando...';
+
+      try {
+        const res = await fetch(API_BASE + '/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, senha })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          // backend devolve { error: "..."}
+          msg.style.color = '#ffb3b3';
+          msg.textContent = data.error || 'Erro ao logar';
+          return;
+        }
+
+        // se ok, data.token deve existir
+        if (!data.token) {
+          msg.style.color = '#ffb3b3';
+          msg.textContent = 'Resposta do servidor sem token.';
+          console.log('Resposta completa:', data);
+          return;
+        }
+
+        // salvar token (lembrando: localStorage é simples, ok pra testes)
+        localStorage.setItem('token', data.token);
+
+        msg.style.color = '#b3ffb3';
+        msg.textContent = 'Login efetuado! Redirecionando...';
+
+        // redireciona para a página principal / dashboard (troque o nome se quiser)
+        setTimeout(() => {
+          window.location.href = 'telaprincipal.html'; // ou dashboard.html
+        }, 700);
+
+      } catch (err) {
+        console.error('Erro fetch:', err);
+        msg.style.color = '#ffb3b3';
+        msg.textContent = 'Erro de conexão com o servidor.';
+      }
+    });
+  </script>
+</body>
+</html>

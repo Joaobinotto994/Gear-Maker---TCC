@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Pedalboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar de pedais */
+    .sidebar {
+      width: 250px;
+      background: #1a1a1a;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #ff3333;
+    }
+
+    .pedal-item {
+      background: #222;
+      padding: 0.5rem;
+      border-radius: 8px;
+      cursor: grab;
+      text-align: center;
+      user-select: none;
+      transition: transform 0.2s;
+    }
+
+    .pedal-item:hover {
+      transform: scale(1.05);
+      background: #333;
+    }
+
+    /* Área do pedalboard */
+    .workspace {
+      flex: 1;
+      background: #111;
+      border-left: 2px solid #222;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+
+    .workspace-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .workspace-header input {
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      width: 200px;
+    }
+
+    .workspace-header button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 25px;
+      background: #ff3333;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .workspace-header button:hover {
+      transform: scale(1.05);
+      background: #cc0000;
+    }
+
+    .board-grid {
+      flex: 1;
+      background: #1a1a1a;
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 1rem;
+      gap: 1rem;
+      overflow: auto;
+    }
+
+    .board-pedal {
+      width: 100px;
+      height: 100px;
+      background: #333;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: move;
+      color: #fff;
+      text-align: center;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar de pedais -->
+  <div class="sidebar">
+    <h2>Pedais Disponíveis</h2>
+    <div class="pedal-item" draggable="true" data-nome="Distortion">Distortion</div>
+    <div class="pedal-item" draggable="true" data-nome="Overdrive">Overdrive</div>
+    <div class="pedal-item" draggable="true" data-nome="Chorus">Chorus</div>
+    <div class="pedal-item" draggable="true" data-nome="Delay">Delay</div>
+    <div class="pedal-item" draggable="true" data-nome="Reverb">Reverb</div>
+  </div>
+
+  <!-- Área de trabalho -->
+  <div class="workspace">
+    <div class="workspace-header">
+      <input type="text" id="boardName" placeholder="Nome do Pedalboard">
+      <button id="saveBoard">Salvar Pedalboard</button>
+    </div>
+    <div class="board-grid" id="boardGrid">
+      <!-- Pedais arrastados vão aparecer aqui -->
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token");
+    const boardGrid = document.getElementById("boardGrid");
+    const pedalItems = document.querySelectorAll(".pedal-item");
+
+    let draggedPedal = null;
+
+    // Drag & Drop
+    pedalItems.forEach(pedal => {
+      pedal.addEventListener("dragstart", (e) => {
+        draggedPedal = e.target;
+      });
+    });
+
+    boardGrid.addEventListener("dragover", (e) => e.preventDefault());
+
+    boardGrid.addEventListener("drop", (e) => {
+      if (draggedPedal) {
+        const newPedal = document.createElement("div");
+        newPedal.className = "board-pedal";
+        newPedal.textContent = draggedPedal.dataset.nome;
+        boardGrid.appendChild(newPedal);
+        draggedPedal = null;
+      }
+    });
+
+    // Salvar pedalboard
+    document.getElementById("saveBoard").addEventListener("click", async () => {
+      const nome = document.getElementById("boardName").value;
+      if (!nome) {
+        alert("Digite o nome do pedalboard!");
+        return;
+      }
+
+      const pedais = Array.from(boardGrid.children).map(p => p.textContent);
+
+      try {
+        const res = await fetch("http://localhost:3000/pedalboards", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ nome, pedais })
+        });
+
+        if (res.ok) {
+          alert("Pedalboard criada com sucesso!");
+          window.location.href = "telaprincipal.html";
+        } else {
+          const errData = await res.json();
+          alert("Erro ao criar pedalboard: " + (errData.error || "Desconhecido"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao criar pedalboard. Veja o console.");
+      }
+    });
+  </script>
+</body>
+</html>

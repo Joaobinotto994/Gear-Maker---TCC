@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .preview1{
+            background-color: rgb(77, 73, 73);
+            
+            height: 8rem;
+            width: 8rem;
+            padding: 2rem;
+        }
+
+        .preview1 img {
+  max-width: 100%;  /* nunca passa da largura da div */
+  max-height: 100%; /* nunca passa da altura da div */
+  display: block;   /* evita espaço embaixo da imagem */
+  margin: auto;     /* centraliza se sobrar espaço */
+}
+    </style>
+</head>
+<body>
+    <div>
+    <h1>Exemplo</h1>
+    <select name="abc" id="select">
+        <option value="">none</option>
+        <option value="img/boss-dd7.webp">Boss DD7</option>
+    </select>
+    <br><br>
+    <div class="preview1">
+       <img id="preview"> 
+    </div>
+    </div>
+</body>
+<script>
+    const select = document.getElementById('select')
+    const preview = document.getElementById('preview')
+
+    select.addEventListener('change',()=> {
+        if(select.value){
+            preview.src = select.value
+             previewPedal.style.display = 'block';
+        }
+        else{
+            preview.style.display = 'none';
+        }
+    }
+    )
+</script>
+</html>

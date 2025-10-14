@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+        }
+        .container{
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            background-color: aqua;
+
+        }
+
+        .list--container{
+            background-color: aliceblue;
+            width: 50%;
+            height: 100%;
+        }
+        .item--container{
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Preview</h1>
+    <button onclick="addItem()">Adicionar</button>
+    <div class="list--container">
+        
+        <ul id="lista">
+        <div class="item--container">
+            <li contenteditable="true">sasdasdasd</li>
+            <button onclick="remover()">Remov</button>
+        </div>   
+        </ul>
+    </div>    
+    </div>
+</body>
+<script>
+    function addItem(){
+        const add = document.createElement('li');
+        add.contentEditable = true;
+        add.innerHTML = 'Clique para editar';
+
+        const botao = document.createElement('button')
+        botao.innerHTML='Remov'
+        botao.addEventListener('click',remover)    
+
+        const lista = document.getElementById('lista')
+        lista.appendChild(add);
+        
+    }
+
+    function remover(event){
+        const item = event.target.parentNode;
+        const lista = document.getElementById('lista');
+        lista.removeChild(item);
+
+
+    }
+
+</script>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Página Inicial - BoardMaker</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-image:url(img/photo-1560849898-d058f7d93b23.jpg-1-1.jpg) ; /* fundo estilo Netflix */
+      color: white;
+    }
+
+    /* 🔹 HEADER */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #e50914;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    nav a {
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* 🔹 HERO */
+    .hero {
+      text-align: center;
+      padding: 100px 20px 60px;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: #e50914;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #ccc;
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background-color: #e50914;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #f40612;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid #ccc;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #333;
+    }
+
+    /* 🔹 SECTION - PORQUE ESCOLHER */
+    .features {
+      padding: 60px 40px;
+      text-align: center;
+      background-color:transparent;
+    }
+
+    .features h2 {
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
+
+    .feature-cards {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background-color: #1f1f1f;
+      padding: 30px;
+      border-radius: 8px;
+      width: 280px;
+      text-align: left;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-icon {
+      font-size: 30px;
+      color: #e50914;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    /* 🔹 FOOTER */
+    footer {
+      background-color: #000;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #777;
+      margin-top: 40px;
+    }
+  </style>
+  <!-- Ícones (Font Awesome) -->
+  <script src="https://kit.fontawesome.com/4b08061f6a.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <a href="telainicial.html" class="logo">BoardMaker</a>
+    <nav>
+      <a href="login.html">Entrar</a>
+      <a href="cadastro.html" style="background:#e50914; padding:8px 14px; border-radius:4px;">Cadastrar</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Crie seu <span>Pedalboard</span> perfeito</h1>
+    <p>Monte, organize e experimente com diferentes combinações de pedais de guitarra.  
+    Salve suas configurações favoritas e compartilhe com outros músicos.</p>
+    <div class="buttons">
+      <button class="btn btn-primary">Começar Agora</button>
+      <button class="btn btn-secondary">Já tenho conta</button>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <h2>Por que escolher nossa Plataforma de Pedais?</h2>
+    <div class="feature-cards">
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-cloud"></i></div>
+        <h3>Salve suas Criações</h3>
+        <p>Mantenha todos os seus pedalboards salvos na nuvem.  
+        Acesse de qualquer lugar e nunca perca suas configurações favoritas.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-users"></i></div>
+        <h3>Interatividade</h3>
+        <p>Navegue pelo pedalboard de outros usuários ou até mesmo de músicos famosos!!</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-bolt"></i></div>
+        <h3>Drag & Drop Intuitivo</h3>
+        <p>Arraste e solte pedais facilmente para criar sua cadeia de efeitos perfeita.  
+        Interface simples e intuitiva.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2025 BoardMaker - Todos os direitos reservados
+  </footer>
+</body>
+</html>
