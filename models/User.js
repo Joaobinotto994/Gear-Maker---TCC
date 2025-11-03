@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: true 
   },
+  avatar: { type: String, default: "https://via.placeholder.com/40" },
   criadoEm: {
     type: Date,
     default: Date.now

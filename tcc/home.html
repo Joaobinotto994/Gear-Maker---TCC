@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PedalPlayground | Início</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body {
+  margin: 0;
+  background-color: #111;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ===== HEADER NETFLIX ESTILO PROFISSIONAL ===== */
+.header {
+  display: flex;
+  justify-content: space-between; /* mantém o logo+links à esquerda e usuário à direita */
+  align-items: center;
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+    background-color: transparent; /* antes estava rgba(0,0,0,0.3) */
+  backdrop-filter: none; 
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* distância entre logo e nav */
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* distância entre os links */
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #e50914;
+}
+
+.nav-links a.active {
+  color: #e50914; /* vermelho estilo Netflix */
+  font-weight: 600; /* opcional, deixa mais destacado */
+}
+
+.nav-links .criar-btn {
+  background: #e50914;
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.nav-links .criar-btn:hover {
+  background: #f40612;
+  transform: scale(1.05);
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Container da busca */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-container input {
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  position: absolute;
+  right: 0;
+}
+
+/* Lupa minimalista */
+.search-icon {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #fff; /* cor do SVG */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.search-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Input aparece quando ativo */
+.search-container.active input {
+  width: 150px;
+  opacity: 1;
+  padding: 4px 10px;
+}
+
+.user-menu img {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border: 1.5px solid #fff;
+  transition: transform 0.2s;
+}
+
+.user-menu img:hover {
+  transform: scale(1.1);
+}
+/* Avatar + Dropdown */
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #222;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+}
+.dropdown button {
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.dropdown button:hover {
+  color: #e50914;
+}
+
+/* Cards estilo Netflix */
+.main-content {
+  padding: 20px 40px;
+}
+
+.category {
+  margin-bottom: 5px;
+}
+.category h2 {
+  margin-left: 60px;
+  font-size: 1.4rem; /* tamanho levemente reduzido */
+  color: #fff;
+  font-weight: 600;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  margin-bottom: 6px; /* mantém o título bem próximo dos cards */
+  letter-spacing: 0.5px;
+}
+
+
+/* Container tipo carrossel */
+.cards-container {
+  display: grid; /* grid permite centralização */
+  grid-auto-flow: column; /* mantém na horizontal */
+  grid-gap: 20px;
+  justify-content: start; /* padrão */
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 50px;
+}
+
+.cards-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card (igual ao da tela principal) */
+/* ===== Cada card individual ===== */
+.card {
+  width: clamp(220px, 18vw, 320px);
+  height: 180px;
+  background: #222;
+ 
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex: 0 0 auto; /* tamanho fixo */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card img {
+  width: 100%;
+  height: 60%;              /* parte da imagem no topo */
+  object-fit: cover;
+}
+
+.card-info {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-info h3 {
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-info p {
+  font-size: 0.9rem;
+  color: #bbb;
+  margin-top: 4px;
+}
+
+/* Efeito hover */
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* ===== Centralização e limite de 5 por linha ===== */
+@media (min-width: 1400px) {
+  .cards-container {
+    max-width: 1600px; /* limite total */
+  }
+}
+/* --- Modal Overlay --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Modal content */
+.modal-content {
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  max-width: 1200px;
+  height: 70%;
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.modal-left {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  min-width: 0;
+}
+
+.modal-left img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.modal-right {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  overflow: auto;
+}
+
+.modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.modal-info h2 {
+  font-size: 1.8rem;
+  color: #ff3333;
+  margin-bottom: 5px;
+}
+
+.modal-user,
+.modal-creator {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin: 0;
+}
+
+.modal-description {
+  background: #2a2a2a;
+  padding: 12px;
+  border-radius: 8px;
+  color: #ddd;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-height: 160px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  white-space: normal;
+  scrollbar-width: thin;
+}
+
+.modal-description::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-description::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.modal-description::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+  color: #fff;
+  font-weight: bold;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.modal-buttons button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff6666, #ff0000);
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #fff;
+}
+
+.edit-delete-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.edit-delete-container button {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  transition: transform 0.2s, background 0.2s;
+  height: 40px;
+}
+
+#addToLibraryBtn {
+  flex: 0.7;
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+}
+
+#deleteBoardBtn {
+  flex: 0.3;
+  background: linear-gradient(135deg, #990000, #660000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+#addToLibraryBtn:hover,
+#deleteBoardBtn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff6666, #ff0000);
+}
+
+/* Like estilo Instagram */
+.like-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s ease;
+  justify-content: center;
+}
+
+.like-container:hover {
+  transform: scale(1.05);
+}
+
+.like-icon {
+  font-size: 22px;
+  color: #bbb;
+  transition: color 0.3s ease;
+}
+
+.like-container.liked .like-icon {
+  color: #e0245e;
+}
+
+.like-count {
+  font-size: 16px;
+  color: #ddd;
+  font-weight: 500;
+}
+
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.4); }
+  60% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.like-btn.liked {
+  animation: heart-pop 0.3s ease;
+  color: red;
+}
+.card.verified-card {
+  background: linear-gradient(135deg, #e40404, #be0f03);
+  box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+}
+
+.card.verified-card .card-info {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.card.verified-card h4 {
+  color: #fff;
+}
+
+.card.verified-card .verified {
+  color: #00ffea;
+}
+.like-btn.liked {
+  animation: heart-pop 0.3s ease;
+  color: red;
+}
+/* === Carrossel com setas estilo Netflix === */
+
+.carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+  padding: 0 0 5px 0; /* quase encostado nos títulos */
+}
+
+.cards-container.few-cards {
+  justify-content: center; /* centraliza quando tiver poucos cards */
+}
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s;
+}
+.scroll-btn:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+.scroll-btn.left {
+  left: 0;
+}
+
+.scroll-btn.right {
+  right: 0;
+}
+
+/* ===== HERO CAROUSEL ===== */
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  overflow: hidden;
+    margin-top: -60px; /* ajusta conforme altura do header */
+  z-index: 0; /* garante que fique atrás do header */
+  position: relative;
+}
+.hero-carousel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 40%, transparent 100%);
+  z-index: 1;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 60px;
+  color: #fff;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* Gradiente sobre as imagens */
+.hero-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.3) 60%, transparent 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+
+.hero-content h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.7);
+}
+
+.hero-content p {
+  font-size: 1.1rem;
+  color: #ddd;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+}
+.hero-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  text-decoration: none; /* remove o underline do link */
+}
+
+.hero-btn.play {
+  background: #e50914;
+  color: #fff;
+}
+
+.hero-btn.play:hover {
+  background: #f40612;
+  transform: scale(1.05);
+}
+
+.hero-btn.info {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.hero-btn.info:hover {
+  background: rgba(255,255,255,0.4);
+  transform: scale(1.05);
+}
+
+/* Setas de navegação */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.5);
+  border: none;
+  color: #fff;
+  font-size: 2.2rem;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+  transition: background 0.3s;
+}
+
+.carousel-btn:hover {
+  background-color: rgba(255,255,255,0.3);
+}
+
+.carousel-btn.left {
+  left: 15px;
+}
+
+.carousel-btn.right {
+  right: 15px;
+}
+.logo {
+  font-size: 2rem; /* aumenta o tamanho do texto */
+  font-weight: 700; /* deixa mais grosso */
+  color: #e50914; /* vermelho estilo Netflix */
+  letter-spacing: 2px; /* opcional, dá espaçamento entre letras */
+}
+.header.scrolled {
+  background-color: #000; /* fundo preto */
+  backdrop-filter: blur(10px); /* mantém o blur se quiser */
+  -webkit-backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease; /* suaviza a transição */
+}
+/* ===== FOOTER ===== */
+.footer {
+  background-color: #1a1a1a;
+  color: #ccc;
+  padding: 20px 40px;
+  text-align: center;
+  border-top: 1px solid #333;
+  font-size: 0.9rem;
+  margin-top: 40px;
+}
+
+.footer a {
+  color: #e50914;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: #ff3333;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+body.modo-busca {
+  background-color: #111; /* fundo escuro como a Netflix */
+  transition: background 0.3s ease;
+}
+/* controle via classe no body: evita usar style.display inline */
+body.modo-busca .hero-carousel,
+body.modo-busca footer {
+  display: none !important;
+}
+#sectionSearchResults {
+  margin-top: 0; /* remover margin-top fixa fora do modo-busca */
+  padding: 0 60px;
+}
+
+#sectionSearchResults .cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+/* se quiser que a sectionSearchResults fique mais abaixo só quando em modo busca: */
+body.modo-busca #sectionSearchResults {
+  margin-top: 20px; /* ajuste fino, se necessário */
+}
+.avatar-preview img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #333;
+}
+
+.modal-avatar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-avatar-content {
+  background: #2c2a2a;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+body.avatar-modal-open {
+  overflow: hidden;
+}
+.avatar-preview img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #444;
+}
+
+
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <div class="logo">BOARDMAKER</div>
+    <nav class="nav-links">
+          <a href="#" id="btninicio">Inicio</a>
+<a href="telaprincipal.html" id="btnPedalboards">Meus Pedalboards</a>
+<a href="#" id="btnVeificados">Verificados</a>
+<select id="filtroEstilo">
+  <option value="">Estilos</option>
+  <option value="">Todos Estilos</option>
+ <option value="Alternativo">Alternativo</option>
+<option value="Bandinha">Bandinha</option>
+<option value="Black Metal">Black Metal</option>
+<option value="Blues">Blues</option>
+<option value="Blues Rock">Blues Rock</option>
+<option value="Country">Country</option>
+<option value="Doom Metal">Doom Metal</option>
+<option value="Eletronico">Eletronico</option>
+<option value="Funk">Funk</option>
+<option value="Gaucha">Gaucha</option>
+<option value="Glam Rock">Glam Rock</option>
+<option value="Gospel">Gospel</option>
+<option value="Hard Rock">Hard Rock</option>
+<option value="Jazz">Jazz</option>
+<option value="Metal">Metal</option>
+<option value="Nu Metal">Nu Metal</option>
+<option value="Pop">Pop</option>
+<option value="Power Metal">Power Metal</option>
+<option value="Punk Rock">Punk Rock</option>
+<option value="Reggae">Reggae</option>
+<option value="Rock">Rock</option>
+<option value="Rock 70's">Rock 70's</option>
+<option value="Rock Psicodelico">Rock Psicodelico</option>
+<option value="Sertanejo">Sertanejo</option>
+<option value="Sertanejo Universitario">Sertanejo Universitario</option>
+<option value="Thrash Metal">Thrash Metal</option>
+  <option value="Outro">Outro</option>
+</select>
+      <a href="teladepedais.html" class="criar-btn">Criar</a>
+    </nav>
+  </div>
+
+  <div class="right-section">
+<div class="search-container">
+  <button id="searchBtn" class="search-icon" aria-label="Pesquisar">
+    <!-- Lupa SVG inline -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"/>
+    </svg>
+  </button>
+  <input type="text" id="searchInput" placeholder="Buscar...">
+</div>
+<div class="user-menu">
+  <img id="userAvatar" src="https://via.placeholder.com/40" alt="Usuário">
+  <div class="dropdown" id="userDropdown">
+    <button id="uploadAvatarBtn">Foto de perfil</button>
+    <button id="logoutBtn">Sair</button>
+  </div>
+</div>
+
+<!-- Modal de avatar -->
+
+<div id="avatarModal" class="modal-avatar">
+  <div class="modal-avatar-content" style="flex-direction: column; align-items: center; text-align: center; width: 350px; padding: 20px;">
+    <h3 style="color: #fff;">Adicionar foto de perfil</h3>
+    <div class="avatar-preview">
+      <img id="avatarPreview" src="https://via.placeholder.com/150" alt="Pré-visualização">
+    </div>
+    <input type="file" id="avatarInput" accept="image/*" style="margin: 15px 0;">
+    <div class="modal-buttons">
+      <button id="saveAvatarBtn">Salvar</button>
+      <button id="cancelAvatarBtn">Cancelar</button>
+    </div>
+  </div>
+</div>
+</header>
+
+  <!-- Banner estilo Netflix -->
+<!-- HERO CAROUSEL -->
+<section class="hero-carousel">
+  <div class="hero-slide active" style="background-image: url('img/photo-1560849898-d058f7d93b23.jpg-1-1.jpg');">
+    <div class="hero-content">
+      <h1>Crie o seu Pedalboard</h1>
+      <p>Combine pedais e descubra seu som único no BoardMaker.</p>
+      <div class="hero-buttons">
+        <a href="teladepedais.html" class="hero-btn play">Criar</a>
+        <button class="hero-btn info">Saiba Mais</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-slide" style="background-image: url('img/foto.png');">
+    <div class="hero-content">
+      <h1>A sua galeria de pedais</h1>
+      <p>Seus pedalboards são guardados aqui, para você nunca mais esquecer do que usou e o que vai usar!!</p>
+      <div class="hero-buttons">
+        <a href="telaprincipal.html" class="hero-btn play">Ver meus pedalboards</a>        
+        <button class="hero-btn info">Saiba Mais</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-slide" style="background-image: url('img/Guitas.png');">
+    <div class="hero-content">
+      <h1>O Som dos seus artistas preferidos estão aqui</h1>
+      <p>Sempre teve duvida do que aquele musico que voce curte usou?? Seus problemas estão resolvidos.</p>
+      <div class="hero-buttons">
+        <button class="hero-btn play">Ver artistas verificados</button>
+        <button class="hero-btn info">Saiba mais</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botões de navegação -->
+  <button class="carousel-btn left">&#10094;</button>
+  <button class="carousel-btn right">&#10095;</button>
+</section>
+ <!-- <section class="category" id="sectionRecommended">
+  <h2>Talvez você goste</h2>
+  <div class="carousel-wrapper">
+    <button class="scroll-btn left" data-target="recommendedBoards">&#10094;</button>
+    <div class="cards-container" id="recommendedBoards"></div>
+    <button class="scroll-btn right" data-target="recommendedBoards">&#10095;</button>
+  </div>
+</section>-->
+  <section class="category" id="sectionVerificados">
+  <h2>Verificados</h2>
+  <div class="carousel-wrapper">
+    <button class="scroll-btn left" data-target="verifiedBoards">&#10094;</button>
+    <div class="cards-container" id="verifiedBoards"></div>
+    <button class="scroll-btn right" data-target="verifiedBoards">&#10095;</button>
+  </div>
+</section>
+
+<section class="category">
+  <h2>Em alta</h2>
+  <div class="carousel-wrapper">
+    <button class="scroll-btn left" data-target="likedBoards">&#10094;</button>
+    <div class="cards-container" id="likedBoards"></div>
+    <button class="scroll-btn right" data-target="likedBoards">&#10095;</button>
+  </div>
+</section>
+
+<section class="category" id="sectionLikedByUser">
+  <h2>Pedalboards Curtidos por Você</h2>
+  <div class="carousel-wrapper">
+    <button class="scroll-btn left" data-target="likedPedalboardsByUser">&#10094;</button>
+    <div class="cards-container" id="likedPedalboardsByUser"></div>
+    <button class="scroll-btn right" data-target="likedPedalboardsByUser">&#10095;</button>
+  </div>
+</section>
+  <!-- Modal -->
+<!-- Modal de visualização do pedalboard -->
+<div id="modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-left">
+      <img id="modalImage" src="" alt="Pedalboard">
+    </div>
+    <div class="modal-right">
+      <span class="close-modal">&times;</span>
+
+      <div class="modal-info">
+        <h2 id="modalName">Nome do Pedalboard</h2>
+        <p class="modal-user" id="modalArtist">De: Usuário</p>
+        <p class="modal-creator" id="modalCreator">Artista: Fulano</p>
+        <p class="modal-description" id="modalDescription">
+          Descrição do pedalboard aqui...
+        </p>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="viewBetterBtn">Ver Pedalboard</button>
+        <div class="edit-delete-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-info">
+      <p>© 2025 BoardMaker. Todos os direitos reservados.</p>
+      <p>Desenvolvido para amantes de música.</p>
+    </div>
+    <div class="footer-contact">
+      <p>Contato: <a href="mailto:jbinotto36@gmail.com">jbinotto36@gmail.com</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const BASE_URL = "http://localhost:3000";
+const token = localStorage.getItem("token");
+const userId = token ? JSON.parse(atob(token.split(".")[1])).id : null;
+const searchContainer = document.querySelector('.search-container');
+const searchBtn = document.getElementById('searchBtn');
+const searchInput = document.getElementById('searchInput');
+
+
+const btnPedalboards = document.getElementById('btnPedalboards');
+const btnArtistas = document.getElementById('btnArtistas');
+const btnPedais = document.getElementById('btnPedais');
+const btnVerificados = document.getElementById('btnVeificados');
+const sectionVerificados = document.getElementById('sectionVerificados');
+const uploadAvatarBtn = document.getElementById("uploadAvatarBtn");
+const avatarModal = document.getElementById("avatarModal");
+const avatarInput = document.getElementById("avatarInput");
+const avatarPreview = document.getElementById("avatarPreview");
+const saveAvatarBtn = document.getElementById("saveAvatarBtn");
+const cancelAvatarBtn = document.getElementById("cancelAvatarBtn");
+  const userDropdown = document.getElementById("userDropdown");
+ 
+  const logoutBtn = document.getElementById("logoutBtn");
+  const modal = document.getElementById("modal");
+  const closeModal = document.querySelector(".close-modal");
+
+
+
+
+
+// ====== FUNÇÃO GLOBAL PARA ABRIR MODAL ======
+function abrirModal(board) {
+  const modal = document.getElementById("modal");
+  const modalImage = document.getElementById("modalImage");
+  const modalName = document.getElementById("modalName");
+  const modalArtist = document.getElementById("modalArtist");
+  const modalCreator = document.getElementById("modalCreator");
+  const modalDescription = document.getElementById("modalDescription");
+
+  modal.style.display = "flex";
+  modalImage.src = board.imagem ? `${BASE_URL}${board.imagem}` : "/img/default-pedalboard.png";
+  modalName.textContent = board.nome;
+  modalArtist.textContent = board.usuario?.nome ? `De: ${board.usuario.nome}` : "Usuário: Desconhecido";
+  modalCreator.textContent = board.artista ? `Artista: ${board.artista}` : "Artista: Não informado";
+  modalDescription.textContent = board.descricao || "Sem descrição";
+
+  const viewBetterBtn = modal.querySelector(".viewBetterBtn");
+  viewBetterBtn.dataset.id = board._id;
+
+  const container = modal.querySelector(".edit-delete-container");
+  container.innerHTML = "";
+
+  if (board.usuario?._id === userId) {
+    const editBtn = document.createElement("button");
+    editBtn.id = "addToLibraryBtn";
+    editBtn.textContent = "Editar";
+    editBtn.onclick = () => window.location.href = `teladepedais.html?id=${board._id}`;
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.id = "deleteBoardBtn";
+    deleteBtn.textContent = "🗑️";
+    deleteBtn.onclick = async () => {
+      if (!confirm(`Deseja realmente excluir o pedalboard "${board.nome}"?`)) return;
+      try {
+        const res = await fetch(`${BASE_URL}/pedalboards/${board._id}`, {
+          method: "DELETE",
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        });
+        if (res.ok) {
+          alert("Pedalboard excluído com sucesso!");
+          modal.style.display = "none";
+          const card = [...document.querySelectorAll(".card")].find(c => c.querySelector("h3")?.textContent.includes(board.nome));
+          if (card) card.remove();
+        }
+      } catch (err) { console.error(err); alert("Erro ao excluir pedalboard"); }
+    };
+
+    container.appendChild(editBtn);
+    container.appendChild(deleteBtn);
+  } else {
+    const addBtn = document.createElement("button");
+    addBtn.id = "addToLibraryBtn";
+    addBtn.textContent = "Add";
+    addBtn.onclick = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/pedalboards/duplicar/${board._id}`, { method: "POST", headers: { "Authorization": `Bearer ${token}` } });
+        if (res.ok) alert("Pedalboard adicionado à sua biblioteca!");
+      } catch (err) { console.error(err); alert("Erro ao adicionar o pedalboard"); }
+    };
+
+    const likeContainer = document.createElement("div");
+    likeContainer.className = "like-container";
+
+    const heartIcon = document.createElement("i");
+    heartIcon.className = "fa-regular fa-heart like-icon";
+
+    const likeCount = document.createElement("span");
+    likeCount.className = "like-count";
+    likeCount.textContent = Array.isArray(board.likes) ? board.likes.length : 0;
+
+    if (Array.isArray(board.likes) && board.likes.includes(userId)) {
+      heartIcon.classList.replace("fa-regular","fa-solid");
+      likeContainer.classList.add("liked");
+    }
+
+    likeContainer.appendChild(heartIcon);
+    likeContainer.appendChild(likeCount);
+
+    likeContainer.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const liked = likeContainer.classList.toggle("liked");
+      if (liked) heartIcon.classList.replace("fa-regular","fa-solid");
+      else heartIcon.classList.replace("fa-solid","fa-regular");
+      try {
+        const res = await fetch(`${BASE_URL}/pedalboards/${board._id}/curtir`, { method:"POST", headers:{Authorization:`Bearer ${token}`} });
+        const data = await res.json();
+        likeCount.textContent = data.totalLikes;
+        if(liked){ if(!Array.isArray(board.likes)) board.likes=[]; board.likes.push(userId);}
+        else board.likes = board.likes.filter(uid=>uid!==userId);
+      } catch(err){ console.error(err); }
+    });
+
+    container.appendChild(addBtn);
+    container.appendChild(likeContainer);
+  }
+
+  const closeModal = modal.querySelector(".close-modal");
+  closeModal.addEventListener("click", () => modal.style.display="none");
+  modal.addEventListener("click", (e) => { if(e.target===modal) modal.style.display="none"; });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+ const userAvatar = document.getElementById("userAvatar");
+  const DEFAULT_AVATAR = "img/perfil.png"; 
+   // === Carrega avatar do usuário ou usa o padrão ===
+  try {
+    const res = await fetch(`${BASE_URL}/usuarios/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+if (res.ok) {
+  const user = await res.json();
+  const avatarUrl = user.avatar ? `${BASE_URL}${user.avatar}` : DEFAULT_AVATAR;
+
+  // Atualiza os dois previews
+  userAvatar.src = avatarUrl;
+  avatarPreview.src = avatarUrl;
+} else {
+  userAvatar.src = DEFAULT_AVATAR;
+  avatarPreview.src = DEFAULT_AVATAR;
+}
+  } catch (err) {
+    console.error("Erro ao carregar avatar:", err);
+    userAvatar.src = DEFAULT_AVATAR;
+  }
+
+ async function mostrarTodosEstilos() {
+    try {
+      const res = await fetch(`${BASE_URL}/todos-pedalboards`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      // Agrupar pedalboards por estilo
+     // Agrupar pedalboards por estilo (considerando múltiplos estilos)
+const pedalboardsPorEstilo = {};
+data.pedalboards.forEach(p => {
+  if (!p.estilo) return;
+
+  // garante que seja sempre array
+  const estilos = Array.isArray(p.estilo) ? p.estilo : [p.estilo];
+
+  estilos.forEach(estilo => {
+    if (!pedalboardsPorEstilo[estilo]) pedalboardsPorEstilo[estilo] = [];
+    pedalboardsPorEstilo[estilo].push(p);
+  });
+});
+      // Cria uma section por estilo
+      Object.entries(pedalboardsPorEstilo).forEach(([estilo, lista]) => {
+        if (lista.length === 0) return;
+
+        const section = document.createElement("section");
+        section.className = "category estilo-dinamico";
+        section.innerHTML = `
+          <h2>${estilo}</h2>
+          <div class="carousel-wrapper">
+            <button class="scroll-btn left" data-target="boards-${estilo}">&#10094;</button>
+            <div class="cards-container" id="boards-${estilo}"></div>
+            <button class="scroll-btn right" data-target="boards-${estilo}">&#10095;</button>
+          </div>
+        `;
+
+        const footer = document.querySelector("footer");
+        document.body.insertBefore(section, footer);
+
+        const container = section.querySelector(".cards-container");
+        lista.forEach(p => container.appendChild(criarCard(p)));
+      });
+
+      centralizarCards();
+      atualizarSetas();
+
+    } catch (err) {
+      console.error("Erro ao carregar pedalboards por estilo:", err);
+    }
+  }
+
+  await mostrarTodosEstilos(); // chama no carregamento da home
+
+  // ===== Select de filtro por estilo =====
+  document.getElementById("filtroEstilo").addEventListener("change", (e) => {
+    const estiloSelecionado = e.target.value;
+
+    if (!estiloSelecionado || estiloSelecionado === "Todos Estilos") {
+      // rola para o topo da página
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // encontra a section do estilo
+    const allSections = document.querySelectorAll('.category.estilo-dinamico');
+    let targetSection = null;
+    allSections.forEach(sec => {
+      const h2 = sec.querySelector('h2');
+      if (h2 && h2.textContent === estiloSelecionado) targetSection = sec;
+    });
+
+    if (targetSection) {
+      const headerOffset = document.querySelector('.header')?.offsetHeight || 0;
+      const sectionTop = targetSection.getBoundingClientRect().top + window.scrollY;
+      const scrollTo = sectionTop - headerOffset - 20; // 20px extra de margem
+      window.scrollTo({ top: scrollTo, behavior: 'smooth' });
+    }
+  });
+
+  closeModal.addEventListener("click", () => modal.style.display = "none");
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) modal.style.display = "none";
+  });
+
+userAvatar.addEventListener("click", (e) => {
+  e.stopPropagation(); // evita fechar o dropdown ao clicar de novo
+  userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
+});
+
+// Fecha dropdown ao clicar fora
+document.addEventListener("click", (e) => {
+  if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
+    userDropdown.style.display = "none";
+  }
+});
+
+// Abre modal ao clicar em “Foto de perfil”
+uploadAvatarBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  avatarModal.style.display = "flex";
+  document.body.classList.add("avatar-modal-open"); // 👈 trava o scroll
+  userDropdown.style.display = "none";
+});
+
+// Fecha modal
+cancelAvatarBtn.addEventListener("click", () => {
+  avatarModal.style.display = "none";
+  document.body.classList.remove("avatar-modal-open");
+
+  // Limpa o arquivo escolhido
+  avatarInput.value = "";
+  // Restaura o preview para o avatar atual do usuário
+  const userAvatar = document.getElementById("userAvatar");
+  avatarPreview.src = userAvatar.src;
+});
+
+avatarModal.addEventListener("click", (e) => {
+  if (e.target === avatarModal) {
+    avatarModal.style.display = "none";
+    document.body.classList.remove("avatar-modal-open");
+  }
+});
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+  });
+
+  await carregarPedalboardsVerificados(token);
+  await carregarMaisCurtidos(token);
+  await carregarPedalboardsCurtidosPorUsuario();
+  await carregarTalvezGoste();
+
+
+
+
+
+// abrir modal
+// abrir modal
+
+
+// também fecha se clicar fora
+
+
+// pré-visualizar imagem escolhida
+avatarInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    avatarPreview.src = URL.createObjectURL(file);
+  }
+});
+
+saveAvatarBtn.addEventListener("click", async () => {
+  const file = avatarInput.files[0];
+  if (!file) return alert("Escolha uma imagem!");
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  // upload para backend
+  const res = await fetch(`${BASE_URL}/upload`, { method: "POST", body: formData });
+  const data = await res.json();
+
+  if (data.src) {
+    // atualizar avatar no usuário
+    const token = localStorage.getItem("token");
+    await fetch(`${BASE_URL}/usuarios/me/avatar`, {
+      method: "PUT",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ avatar: data.src })
+    });
+
+    // atualizar avatar na tela (header e modal)
+    const novaUrl = `${BASE_URL}${data.src}`;
+    userAvatar.src = novaUrl;
+    avatarPreview.src = novaUrl;
+
+    // fecha o modal
+    avatarModal.style.display = "none";
+    document.body.classList.remove("avatar-modal-open");
+  }
+});
+  document.querySelectorAll(".scroll-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const targetId = btn.dataset.target;
+    const container = document.getElementById(targetId);
+
+    if (!container) return;
+
+    const scrollAmount = 300; // distância por clique
+    if (btn.classList.contains("left")) {
+      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  });
+});
+  document.querySelectorAll(".viewBetterBtn").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    const boardId = e.currentTarget.dataset.id;
+    if (!boardId) {
+      alert("ID do pedalboard não definido!");
+      return;
+    }
+    window.location.href = `verpedalboard.html?id=${boardId}`;
+  });
+});
+ const btnPedalboards = document.getElementById('btnPedalboards');
+  const btnArtistas = document.getElementById('btnArtistas');
+  const btnPedais = document.getElementById('btnPedais');
+
+  const telaPrincipal = document.getElementById('telaprincipal');
+  const telaArtistas = document.getElementById('telaArtistas');
+  const telaPedais = document.getElementById('telaPedais');
+
+  const links = document.querySelectorAll('.nav-links a');
+
+
+});
+
+
+// ====== FUNÇÕES DE CARREGAMENTO ======
+async function carregarPedalboardsVerificados(token) {
+  const container = document.getElementById("verifiedBoards");
+  container.innerHTML = "<p>Carregando...</p>";
+
+  try {
+    const res = await fetch(`${BASE_URL}/todos-pedalboards`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    const pedalboards = data.pedalboards.filter(p => p.verified);
+
+    container.innerHTML = "";
+    pedalboards.forEach(p => container.appendChild(criarCard(p)));
+
+    centralizarCards();
+    atualizarSetas(); // <-- adiciona isso aqui
+  } catch {
+    container.innerHTML = "<p>Erro ao carregar pedalboards verificados</p>";
+  }
+}
+
+async function carregarMaisCurtidos(token) {
+  const container = document.getElementById("likedBoards");
+  container.innerHTML = "<p>Carregando...</p>";
+
+  try {
+    const res = await fetch(`${BASE_URL}/todos-pedalboards`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+
+    const ordenados = data.pedalboards
+      .filter(p => p.likes?.length > 0)
+      .sort((a, b) => b.likes.length - a.likes.length)
+      .slice(0, 10);
+
+    container.innerHTML = "";
+    ordenados.forEach(p => container.appendChild(criarCard(p)));
+
+    centralizarCards();
+    atualizarSetas(); // <-- e aqui também
+  } catch {
+    container.innerHTML = "<p>Erro ao carregar pedalboards curtidos</p>";
+  }
+}
+
+// Função para carregar pedalboards curtidos pelo usuário
+async function carregarPedalboardsCurtidosPorUsuario() {
+  try {
+    if (!userId) return;
+
+    const res = await fetch(`${BASE_URL}/pedalboards/curtidos/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const pedalboards = await res.json();
+
+    const section = document.getElementById("sectionLikedByUser");
+    const container = document.getElementById("likedPedalboardsByUser");
+    container.innerHTML = "";
+
+    if (!pedalboards.length) {
+      section.style.display = "none"; // oculta a seção se não houver curtidos
+      return;
+    }
+
+    section.style.display = "block"; // garante que a seção apareça
+    pedalboards.forEach(board => {
+      const card = criarCard(board);
+      container.appendChild(card);
+    });
+
+    centralizarCards();
+    atualizarSetas();
+
+  } catch (err) {
+    console.error("Erro ao carregar pedalboards curtidos:", err);
+  }
+}
+
+async function carregarTalvezGoste() {
+  try {
+    if (!userId) return;
+
+    let sugestoes = [];
+
+    // 1️⃣ Tentar pegar sugestões inteligentes do backend
+    const res = await fetch(`${BASE_URL}/pedalboards/sugeridos/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    if (res.ok) {
+      sugestoes = await res.json();
+    }
+
+    // 2️⃣ Se o usuário for novo (sem sugestões), pegar pedalboards aleatórios
+    if (!sugestoes.length) {
+      const resAleatorio = await fetch(`${BASE_URL}/pedalboards/aleatorios?limite=10`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (resAleatorio.ok) {
+        sugestoes = await resAleatorio.json();
+      }
+    }
+
+    const section = document.getElementById('sectionRecommended');
+    const container = document.getElementById('recommendedBoards');
+
+    // 3️⃣ Se ainda não houver nada, não mostrar a seção
+    if (!sugestoes.length) {
+      section.style.display = 'none';
+      return;
+    } else {
+      section.style.display = 'block';
+    }
+
+    // 4️⃣ Limpar container e renderizar os cards
+    container.innerHTML = '';
+    sugestoes.forEach(board => {
+      const card = criarCard(board); 
+      container.appendChild(card);
+    });
+
+    centralizarCards();
+    atualizarSetas();
+
+  } catch (err) {
+    console.error('Erro ao carregar "Talvez você goste":', err);
+  }
+}
+
+function centralizarCards() {
+  document.querySelectorAll('.cards-container').forEach(container => {
+    const cards = container.querySelectorAll('.card');
+    if (cards.length <= 5) { // menos de 5 cards
+      container.classList.add('few-cards');
+    } else {
+      container.classList.remove('few-cards');
+    }
+  });
+}
+// Função para buscar pedalboards
+async function buscarPedalboards() {
+  const query = searchInput.value.trim();
+  if (!query) return;
+
+  const container = document.getElementById("recommendedBoards");
+  container.innerHTML = "<p>Buscando...</p>";
+
+  try {
+    const res = await fetch(`${BASE_URL}/pedalboards/search?q=${encodeURIComponent(query)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const resultados = await res.json(); // já é o array de pedalboards do backend
+
+    container.innerHTML = "";
+    if (resultados.length === 0) {
+      container.innerHTML = "<p>Nenhum pedalboard encontrado</p>";
+    } else {
+      resultados.forEach(board => container.appendChild(criarCard(board)));
+    }
+
+    centralizarCards();
+    atualizarSetas();
+
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = "<p>Erro ao buscar pedalboards</p>";
+  }
+}
+// ===== BUSCA AVANÇADA (substitua/cole após suas outras funções) =====
+let searchDebounceTimer = null;
+
+// Cria (se necessário) a seção de resultados de busca no DOM
+function ensureSearchSection() {
+  let section = document.getElementById('sectionSearchResults');
+  if (section) return section;
+
+  // cria a seção e insere antes da primeira category (ou depois do hero)
+  section = document.createElement('section');
+  section.className = 'category';
+  section.id = 'sectionSearchResults';
+section.innerHTML = `
+  <div class="carousel-wrapper">
+    <button class="scroll-btn left" data-target="searchResults">&#10094;</button>
+    <div class="cards-container" id="searchResults"></div>
+    <button class="scroll-btn right" data-target="searchResults">&#10095;</button>
+  </div>
+`;
+
+  // tenta inserir logo após o hero-carousel (se existir)
+  const hero = document.querySelector('.hero-carousel');
+  if (hero && hero.parentNode) hero.parentNode.insertBefore(section, hero.nextSibling);
+  else document.body.insertBefore(section, document.querySelector('.category'));
+
+  return section;
+}
+
+function hideAllMainSections() {
+  document.querySelectorAll('section.category').forEach(sec => {
+    if (sec.id !== 'sectionSearchResults') sec.style.display = 'none';
+  });
+}
+
+function showAllMainSections() {
+  document.querySelectorAll('section.category').forEach(sec => sec.style.display = 'block');
+}
+// ======== EFEITO "TELA DE BUSCA" ESTILO NETFLIX ========
+
+// Ativa modo busca: só adiciona a classe no body (não mexe no style.display do hero)
+function ativarModoBusca() {
+  document.body.classList.add('modo-busca');
+  // opcional: garantir que a section de resultados exista e esteja visível
+  const section = ensureSearchSection();
+  section.style.display = 'block';
+  // rolar até topo pra evitar gap visual (opcional)
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+
+// Desativa modo busca: remove classe do body e esconde a seção de resultados
+function desativarModoBusca() {
+  document.body.classList.remove('modo-busca');
+
+  const section = document.getElementById('sectionSearchResults');
+  if (section) {
+    // em vez de remover do DOM, só escondemos (para não perder event listeners se quiser)
+    section.style.display = 'none';
+    // se preferir remover totalmente:
+    // section.remove();
+  }
+
+  // garantia extra: remove qualquer estilo inline que possa ter ficado no hero/footer
+  const hero = document.querySelector('.hero-carousel');
+  const footer = document.querySelector('footer');
+  if (hero) hero.style.removeProperty('display');
+  if (footer) footer.style.removeProperty('display');
+
+  // corrigir posição da página (previne gap se o usuário estava rolado)
+  // você pode rolar até o topo ou até o topo do hero
+  if (hero) {
+    const heroTop = hero.getBoundingClientRect().top + window.scrollY;
+    // rola para alinhamento normal considerando header sticky
+    const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
+    const target = Math.max(0, heroTop - headerHeight);
+    window.scrollTo({ top: target, behavior: 'smooth' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // atualiza setas etc.
+  atualizarSetas();
+}
+
+// Função que popula a seção de busca com resultados (ou mensagem)
+function showSearchResults(results) {
+  const section = ensureSearchSection();
+  const container = document.getElementById('searchResults');
+  container.innerHTML = '';
+
+if (!results || results.length === 0) {
+  container.innerHTML = "";
+  hideAllMainSections();
+  section.style.display = "block";
+  atualizarSetas();
+  return;
+}
+
+  results.forEach(board => {
+    const card = criarCard(board);
+    container.appendChild(card);
+  });
+
+  // esconde as outras seções enquanto a busca está ativa
+  hideAllMainSections();
+  section.style.display = 'block';
+
+  centralizarCards();
+  atualizarSetas();
+}
+
+// Função que limpa a busca e restaura a home
+// função que limpa a busca (chamada quando input fica vazio)
+function clearSearchResults() {
+  const section = document.getElementById('sectionSearchResults');
+  if (section) section.style.display = 'none';
+  // restaura seções
+  showAllMainSections();
+  // desativa o modo busca (usa a função que faz limpeza completa)
+  desativarModoBusca();
+
+  // limpa container de resultados por segurança
+  const container = document.getElementById('searchResults');
+  if (container) container.innerHTML = '';
+
+  // força atualização visual das setas/cards
+  atualizarSetas();
+}
+
+// Função principal que faz a requisição ao backend
+async function performSearch(query) {
+  if (!token) {
+    alert('Você precisa estar logado para buscar.');
+    return;
+  }
+
+  query = (query || '').trim();
+  if (!query) {
+    clearSearchResults();
+    return;
+  }
+
+  const section = ensureSearchSection();
+  const container = document.getElementById('searchResults');
+  container.innerHTML = '<p>Buscando...</p>';
+  hideAllMainSections();
+  ativarModoBusca();
+  section.style.display = 'block';
+
+  try {
+    const res = await fetch(`${BASE_URL}/pedalboards/search?q=${encodeURIComponent(query)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      const txt = await res.text();
+      console.error('Erro busca:', res.status, txt);
+      container.innerHTML = '<p>Erro ao buscar pedalboards</p>';
+      return;
+    }
+
+    const resultados = await res.json(); // seu backend já retorna array de pedalboards
+    // Se sua API tiver estrutura diferente (ex: { pedalboards: [...] }) adapte aqui.
+    if (Array.isArray(resultados)) {
+      showSearchResults(resultados);
+    } else if (resultados.pedalboards && Array.isArray(resultados.pedalboards)) {
+      showSearchResults(resultados.pedalboards);
+    } else {
+      // fallback
+      showSearchResults([]);
+    }
+  } catch (err) {
+    console.error('Erro ao buscar:', err);
+    container.innerHTML = '<p>Erro ao buscar pedalboards</p>';
+  }
+}
+
+// Debounce e eventos: pesquisa enquanto digita e ao pressionar Enter
+searchInput.addEventListener('input', (e) => {
+  const q = e.target.value;
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(() => {
+    performSearch(q);
+  }, 450); // 450ms debounce (ajuste se quiser)
+});
+
+// Enter dispara busca imediata
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    clearTimeout(searchDebounceTimer);
+    performSearch(searchInput.value.trim());
+  } else if (e.key === 'Escape') {
+    // Esc limpa a busca e restaura a home
+    searchInput.value = '';
+    clearSearchResults();
+  }
+});
+
+// Também mantemos o clique no botão de lupa para abrir/fechar o campo
+searchBtn.addEventListener('click', () => {
+  searchContainer.classList.toggle('active');
+  if (searchContainer.classList.contains('active')) {
+    searchInput.focus();
+  } else {
+    // se fechar a lupa e o input estiver vazio, restaurar seções
+    if (!searchInput.value.trim()) clearSearchResults();
+  }
+});
+
+// Se o usuário apagar todo o texto manualmente (backspace até vazio), limpa resultados
+searchInput.addEventListener('blur', () => {
+  // não limpa automaticamente aqui para permitir clicar em resultado; só limpa se vazio
+  if (!searchInput.value.trim()) {
+    clearSearchResults();
+  }
+});
+
+// ====== FUNÇÃO PARA CRIAR CARD ======
+function criarCard(pedalboard) {
+  const card = document.createElement("div");
+  card.classList.add("card");
+
+  // Se for verificado, adiciona a classe que muda a cor
+  if (pedalboard.verified) {
+    card.classList.add("verified-card");
+  }
+
+  // Imagem
+  const img = document.createElement("img");
+  img.src = `${BASE_URL}${pedalboard.imagemCard || pedalboard.imagem || '/img/default-pedalboard.png'}`;
+  img.alt = pedalboard.nome;
+
+  // Info
+  const info = document.createElement("div");
+  info.classList.add("card-info");
+  info.innerHTML = `
+    <h3>
+      ${pedalboard.nome}
+      ${pedalboard.verified ? '<span class="verified"> ✔️</span>' : ''}
+    </h3>
+    <p>${pedalboard.usuario?.nome || pedalboard.artista || "Desconhecido"}</p>
+  `;
+
+  // Monta o card
+  card.appendChild(img);
+  card.appendChild(info);
+
+  // Clique abre modal
+  card.addEventListener("click", () => abrirModal(pedalboard));
+
+  return card;
+}
+// ===== CARROSSEL AUTOMÁTICO DO BANNER =====
+const slides = document.querySelectorAll(".hero-slide");
+const prevBtn = document.querySelector(".carousel-btn.left");
+const nextBtn = document.querySelector(".carousel-btn.right");
+let currentSlide = 0;
+
+function showSlide(index) {
+  slides.forEach((slide, i) => {
+    slide.classList.toggle("active", i === index);
+  });
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % slides.length;
+  showSlide(currentSlide);
+}
+
+function prevSlideFunc() {
+  currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+  showSlide(currentSlide);
+}
+
+// Botões de navegação
+nextBtn.addEventListener("click", nextSlide);
+prevBtn.addEventListener("click", prevSlideFunc);
+
+// Troca automática a cada 6 segundos
+setInterval(nextSlide, 6000);
+
+// Adiciona classe 'scrolled' ao header ao rolar
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('.header');
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+//lupa
+searchBtn.addEventListener('click', () => {
+  searchContainer.classList.toggle('active');
+  if(searchContainer.classList.contains('active')) {
+    searchInput.focus();
+  }
+});
+// Fecha o input ao clicar fora
+document.addEventListener('click', (e) => {
+  if (!searchContainer.contains(e.target)) {
+    searchContainer.classList.remove('active');
+  }
+});
+
+// Evita que clique dentro do input feche
+searchInput.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
+
+function atualizarSetas() {
+  document.querySelectorAll('.carousel-wrapper').forEach(wrapper => {
+    const container = wrapper.querySelector('.cards-container');
+    const btnLeft = wrapper.querySelector('.scroll-btn.left');
+    const btnRight = wrapper.querySelector('.scroll-btn.right');
+
+    // Mostra/esconde a seta esquerda
+    if (container.scrollLeft > 0) {
+      btnLeft.style.display = 'flex';
+    } else {
+      btnLeft.style.display = 'none';
+    }
+
+    // Mostra/esconde a seta direita
+    if (container.scrollWidth - container.clientWidth - container.scrollLeft > 1) {
+      btnRight.style.display = 'flex';
+    } else {
+      btnRight.style.display = 'none';
+    }
+
+    // Atualiza também ao rolar com scroll manual
+    container.addEventListener('scroll', () => {
+      if (container.scrollLeft > 0) btnLeft.style.display = 'flex';
+      else btnLeft.style.display = 'none';
+
+      if (container.scrollWidth - container.clientWidth - container.scrollLeft > 1) btnRight.style.display = 'flex';
+      else btnRight.style.display = 'none';
+    });
+  });
+}
+btnVerificados.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const headerOffset = document.querySelector('.header').offsetHeight; // altura do header
+  const sectionPosition = sectionVerificados.getBoundingClientRect().top + window.scrollY;
+  const offsetPosition = sectionPosition - headerOffset - 20; // 20px extra de margem se quiser
+
+  window.scrollTo({
+    top: offsetPosition,
+    behavior: 'smooth'
+  });
+});
+
+
+// === ABRIR / FECHAR BUSCA ===
+searchBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  searchContainer.classList.toggle("active");
+  
+  // foca o campo quando abrir
+  if (searchContainer.classList.contains("active")) {
+    searchInput.focus();
+  } else {
+    searchInput.value = "";
+  }
+});
+
+
+</script>
+</body>
+</html>

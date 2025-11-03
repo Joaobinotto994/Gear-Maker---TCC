@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualizar Pedalboard</title>
+ <style>
+            body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            height: 100vh;
+            background: #141414;
+            color: #fff;
+        }
+#sidebar {
+    width: 240px;
+    background: linear-gradient(180deg, #1c1c1c, #111);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* menos espaçamento entre os elementos */
+    border-right: 2px solid #222;
+}
+
+#sidebar h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 5px 0; /* remove margens extras */
+    color: #e50914;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#sidebar p {
+    margin: 2px 0; /* deixa os <p> bem próximos */
+    line-height: 1.3; /* ajusta altura da linha */
+    font-size: 14px;
+}
+
+        select, input {
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            background: #2a2a2a;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            transition: background 0.2s;
+        }
+
+        select:hover, input:hover {
+            background: #3a3a3a;
+        }
+
+        .preview {
+            width: 100%;
+            height: 140px;
+            background: #222;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+.preview img {
+    max-width: 90%;
+    max-height: 90%;
+    display: block;
+    cursor: grab;
+    transition: transform 0.2s;
+}
+
+        .preview img:hover {
+            transform: scale(1.05);
+        }
+
+        #board {
+            flex: 1;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+#board-area {
+    width: 85%;
+    height: 85%;
+    background: #1c1c1c;
+    border: 3px dashed #333;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+
+    background-size: 100% 100%; /* ou 'contain' */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+        #controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #e50914;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        button:hover {
+            background: #f40612;
+            transform: scale(1.05);
+        }
+
+
+
+        .placed-pedal, .placed-board {
+    width: 80px; /* ajuste para o tamanho que você quer */
+    height: auto;
+    position: absolute;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.2s;
+    z-index: 1;
+        }
+
+
+
+        .placed-pedal.dragging, .placed-board.dragging {
+            cursor: grabbing;
+            opacity: 0.8;
+        }
+
+        .placed-board {
+            width: 300px;
+            z-index: 0;
+            opacity: 0.9;
+        }
+
+        .pedal-wrapper, .board-wrapper {
+            position: absolute;
+        }
+
+        .btn-remove, .btn-rotate {
+            display: none;
+            position: absolute;
+            top: 0px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .btn-remove {
+            right: 0px;
+            color: red;
+        }
+
+        .btn-rotate {
+            right: 20px;
+            color: blue;
+        }
+
+        .pedal-wrapper:hover .btn-remove,
+        .pedal-wrapper:hover .btn-rotate,
+        .board-wrapper:hover .btn-remove,
+        .board-wrapper:hover .btn-rotate {
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            width: 80%;
+            height: 70%;
+            background: #1c1c1c;
+            border-radius: 12px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .modal-left, .modal-right {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .modal-left {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .modal-left img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        .modal-right {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-buttons {
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        #modalInicial .modal-content {
+            flex-direction: column;
+            padding: 30px;
+            height: auto;
+            text-align: center;
+        }
+
+        #modalInicial input {
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            background: #2a2a2a;
+            color: #fff;
+            width: 100%;
+        }
+
+        #modalInicial .modal-buttons {
+            justify-content: space-between;
+            }
+
+            .pedal-wrapper.selected .btn-remove,
+.pedal-wrapper.selected .btn-rotate,
+.board-wrapper.selected .btn-remove,
+.board-wrapper.selected .btn-rotate {
+  display: block !important;
+}
+
+.action-menu {
+  position: absolute;
+  top: -90px;
+  left: 0;
+  background: rgba(20, 20, 20, 0.9);
+  color: white;
+  padding: 5px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 9999;
+}
+
+.action-menu button {
+  background: none;
+  color: white;
+  border: 1px solid #555;
+  cursor: pointer;
+  padding: 3px 6px;
+  font-size: 12px;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+.action-menu button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.pedal-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.trash-btn {
+  background: #d9534f;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-left: 5px;
+  transition: 0.2s;
+}
+.trash-btn:hover {
+  background: #b52b27;
+}
+
+/* Modal de Board e Pedal */
+#modalDeleteBoard .modal-content,
+#modalDeletePedal .modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 80vh; /* limita altura do modal */
+  padding: 20px;
+  gap: 15px; /* espaço entre título, cards e botão */
+}
+
+/* Container de cards com rolagem */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  max-height: 300px; /* altura máxima antes de rolar */
+  overflow-y: auto;
+}
+
+/* Card individual */
+.cards-container .card-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.cards-container .card-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+
+/* ====== FOOTER FIXO DO SIDEBAR ====== */
+#sidebar-footer {
+  margin-top: auto; /* empurra para baixo do sidebar */
+  display: flex;
+  gap: 7px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* Botão Adicionar ocupa 70% */
+#addBibliotecaBtn {
+  flex: 9; /* 70% do espaço */
+  background: #f70000;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+#addBibliotecaBtn:hover {
+  background: #ff0000;
+  transform: scale(1.03);
+}
+
+/* Botão Voltar ocupa 30% */
+#voltarBtn {
+  flex: 1; /* 30% do espaço */
+  background: #888;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+#voltarBtn:hover {
+  background: #aaa;
+  transform: scale(1.03);
+}
+
+
+/* ===== PREVIEW DO PEDAL ===== */
+#pedalPreview {
+  background: #111;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px 0;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  display: none; /* só aparece quando um pedal é clicado */
+}
+
+#pedalPreview .preview {
+  width: 100%;
+  height: 130px;
+  background: #222;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+#pedalPreview .preview img {
+  max-width: 85%;
+  max-height: 85%;
+  transition: transform 0.2s;
+}
+
+#pedalPreview .preview img:hover {
+  transform: scale(1.05);
+}
+
+#previewNome {
+  color: #fff;
+  font-size: 1rem;
+  margin: 4px 0;
+}
+
+#previewCategoria {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin: 2px 0 8px;
+}
+
+#previewSpec {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 0.85rem;
+  color: #ccc;
+  text-align: left;
+  white-space: pre-wrap; /* respeita quebras de linha do texto */
+}
+
+
+ </style>
+</head>
+<body>
+<div id="sidebar">
+  <h2><span id="nomePedalboard"></span></h2>
+  <p><strong>De:</strong> <span id="usuarioPedalboard"></span></p>
+  <p><strong>Artista:</strong> <span id="artistaPedalboard"></span></p>
+  <p><strong>Descrição:</strong> <span id="descricaoPedalboard"></span></p>
+  <p><strong>Clique nos pedais para informações e specs!!</strong></p>
+
+    <!-- Área dinâmica de preview do pedal -->
+  <div id="pedalPreview">
+    <div class="preview">
+      <img id="previewImg" src="" alt="Preview do pedal">
+    </div>
+    <h3 id="previewNome"></h3>
+    <p id="previewCategoria"></p>
+    <p id="previewSpec"></p>
+  </div>
+
+  <!-- Footer fixo dos botões -->
+  <div id="sidebar-footer">
+    <button id="addBibliotecaBtn">Add. à minha Biblioteca</button>
+    <button id="voltarBtn">🚪</button>
+  </div>
+</div>
+
+  <div id="board">
+    <div id="board-area"></div>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const token = localStorage.getItem("token");
+  const params = new URLSearchParams(window.location.search);
+  const boardId = params.get("id");
+  const BASE_URL = 'http://localhost:3000';
+
+  if (!boardId) {
+    alert("Nenhum pedalboard selecionado.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  try {
+    // Busca pedalboard pelo ID
+    const res = await fetch(`${BASE_URL}/pedalboards/${boardId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) throw new Error("Falha ao carregar o pedalboard");
+
+    const board = await res.json();
+
+    // Preenche sidebar
+    document.getElementById("nomePedalboard").textContent = board.nome;
+    document.getElementById("usuarioPedalboard").textContent = board.usuario?.nome || "Desconhecido";
+    document.getElementById("artistaPedalboard").textContent = board.artista || "—";
+    document.getElementById("descricaoPedalboard").textContent = board.descricao || "Sem descrição";
+
+    // Seleciona área do board
+    const boardArea = document.getElementById("board-area");
+
+    // ===== APLICAR FUNDO =====
+// ===== APLICAR FUNDO =====
+let fundoUrl = board.fundo || '';
+if (fundoUrl) {
+  // Se for base64, deixa como está
+  if (!/^data:image/.test(fundoUrl)) {
+    // Se não começar com http ou https, adiciona BASE_URL
+    if (!/^https?:\/\//.test(fundoUrl)) {
+      fundoUrl = fundoUrl.startsWith('/') ? `${BASE_URL}${fundoUrl}` : `${BASE_URL}/${fundoUrl}`;
+    }
+  }
+
+  boardArea.style.backgroundImage = `url('${fundoUrl}')`;
+  boardArea.style.backgroundSize = 'cover';
+  boardArea.style.backgroundPosition = 'center';
+  boardArea.style.backgroundRepeat = 'no-repeat';
+} else {
+  boardArea.style.backgroundColor = '#f0f0f0';
+}
+
+    const scale = 10; // 1cm = 10px
+
+function criarItemVisual(item, type) {
+  const el = document.createElement("img");
+
+  // Ajusta src com BASE_URL
+  let src = item.src || '';
+  if (src && !src.startsWith('http')) {
+    src = src.startsWith('/') ? `${BASE_URL}${src}` : `${BASE_URL}/${src}`;
+  } else if (!src) {
+    src = type === 'pedal'
+      ? `${BASE_URL}/uploads/imagem-placeholder.png`
+      : `${BASE_URL}/uploads/default-board.png`;
+  }
+
+  el.src = src;
+  el.className = type === "pedal" ? "placed-pedal" : "placed-board";
+  el.style.position = "absolute";
+  el.style.left = (item.x || 0) + "px";
+  el.style.top = (item.y || 0) + "px";
+  el.style.width = (item.widthCm || (type === "pedal" ? 8 : 30)) * scale + "px";
+  el.style.height = (item.heightCm || (type === "pedal" ? 8 : 30)) * scale + "px";
+  el.style.transform = `rotate(${item.rotation || 0}deg)`;
+  el.style.zIndex = item.zIndex || 10;
+
+  // fallback caso a imagem quebre
+  el.onerror = () => {
+    el.src = type === "pedal"
+      ? `${BASE_URL}/uploads/imagem-placeholder.png`
+      : `${BASE_URL}/uploads/default-board.png`;
+  };
+
+  boardArea.appendChild(el);
+
+  // === Evento de clique para mostrar o preview do pedal ===
+
+el.addEventListener("click", async () => {
+  if (type !== "pedal") return;
+
+  const preview = document.getElementById("pedalPreview");
+  const img = document.getElementById("previewImg");
+  const nome = document.getElementById("previewNome");
+  const categoria = document.getElementById("previewCategoria");
+  const spec = document.getElementById("previewSpec");
+
+try {
+  const response = await fetch(`${BASE_URL}/pedais/${item.pedalId}`, {
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+
+  if (!response.ok) throw new Error("Erro ao buscar pedal no servidor.");
+
+  const pedal = await response.json();
+  console.log("Imagem recebida do backend:", pedal.imagem);
+
+  // 🔧 Corrige o caminho da imagem
+  let imageUrl = `${BASE_URL}/uploads/imagem-placeholder.png`;
+  if (pedal.imagem) {
+    if (pedal.imagem.startsWith('http')) {
+      imageUrl = pedal.imagem;
+    } else if (pedal.imagem.startsWith('/')) {
+      imageUrl = `${BASE_URL}${pedal.imagem}`;
+    } else {
+      imageUrl = `${BASE_URL}/${pedal.imagem}`;
+    }
+  }
+
+  img.src = imageUrl;
+  console.log("URL final da imagem:", imageUrl);
+
+  nome.textContent = pedal.nome || "Pedal sem nome";
+  categoria.textContent = pedal.categoria || "Categoria desconhecida";
+  spec.textContent = item.spec || "Nenhuma configuração adicionada.";
+
+  preview.style.display = "block";
+  preview.style.opacity = 0;
+  preview.style.transition = "opacity 0.3s";
+  requestAnimationFrame(() => {
+    preview.style.opacity = 1;
+  });
+
+} catch (err) {
+  console.error("Erro ao carregar preview do pedal:", err);
+  img.src = el.src;
+  nome.textContent = item.nome || "Pedal sem nome";
+  categoria.textContent = item.categoria || "Categoria desconhecida";
+  spec.textContent = item.spec || "Nenhuma configuração adicionada.";
+  preview.style.display = "block";
+}
+});
+}
+
+
+    // Renderiza pedais
+    board.pedais?.forEach(p => criarItemVisual(p, "pedal"));
+    // Renderiza boards
+    board.boards?.forEach(b => criarItemVisual(b, "board"));
+
+
+
+ // ===== Renderizar Annotations (Anotações) =====
+// ===== Renderizar Annotations (exatamente como no editor) =====
+if (board.annotations && Array.isArray(board.annotations)) {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'draw-canvas';
+  canvas.width = boardArea.clientWidth;
+  canvas.height = boardArea.clientHeight;
+  canvas.style.position = 'absolute';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.style.pointerEvents = 'none'; // só visualização
+  canvas.style.zIndex = '50';
+  boardArea.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+
+  // Copia exatamente como no editor
+  const objects = board.annotations.map(obj => ({ ...obj })); 
+
+  function redraw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    objects.forEach(obj => {
+      ctx.strokeStyle = obj.color || '#ff0000';
+      ctx.fillStyle = obj.color || '#ff0000';
+      ctx.lineWidth = obj.size || 2;
+
+      if (obj.type === 'pen') {
+        ctx.beginPath();
+        obj.points.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+        ctx.stroke();
+
+      } else if (obj.type === 'line') {
+        ctx.beginPath();
+        ctx.moveTo(obj.x1,obj.y1);
+        ctx.lineTo(obj.x2,obj.y2);
+        ctx.stroke();
+
+      } else if (obj.type === 'arrow') {
+        ctx.beginPath();
+        ctx.moveTo(obj.x1,obj.y1);
+        ctx.lineTo(obj.x2,obj.y2);
+        ctx.stroke();
+
+        const angle = Math.atan2(obj.y2 - obj.y1, obj.x2 - obj.x1);
+        const arrowSize = 10;
+        ctx.beginPath();
+        ctx.moveTo(obj.x2,obj.y2);
+        ctx.lineTo(obj.x2 - arrowSize * Math.cos(angle - Math.PI/6),
+                   obj.y2 - arrowSize * Math.sin(angle - Math.PI/6));
+        ctx.lineTo(obj.x2 - arrowSize * Math.cos(angle + Math.PI/6),
+                   obj.y2 - arrowSize * Math.sin(angle + Math.PI/6));
+        ctx.lineTo(obj.x2,obj.y2);
+        ctx.fill();
+
+      } else if (obj.type === 'text') {
+        ctx.font = `${obj.size*5}px Arial`;
+        ctx.fillText(obj.text || '', obj.x,obj.y);
+
+      } else if (obj.type === 'circle') {
+        ctx.beginPath();
+        ctx.arc(obj.x,obj.y,obj.radius || 20,0,Math.PI*2);
+        ctx.stroke();
+
+      } else if (obj.type === 'rect') {
+        ctx.strokeRect(obj.x,obj.y,obj.width || 100,obj.height || 60);
+      }
+    });
+  }
+
+  redraw();
+}
+
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao carregar o pedalboard.");
+  }
+
+  // Botões
+  document.getElementById("voltarBtn").addEventListener("click", () => {
+    window.location.href = "telaPrincipal.html";
+  });
+
+document.getElementById("addBibliotecaBtn").addEventListener("click", async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/pedalboards/duplicar/${boardId}`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!res.ok) throw new Error("Falha ao duplicar o pedalboard");
+
+    const data = await res.json();
+    console.log("Novo ID:", data.novoId);
+
+    // Redireciona para o novo pedalboard
+    window.location.href = `verpedalboard.html?id=${data.novoId}`;
+
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao adicionar à biblioteca.");
+  }
+
+  });
+});
+</script>
+</body>
+</html>

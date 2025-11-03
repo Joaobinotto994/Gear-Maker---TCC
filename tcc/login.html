@@ -118,10 +118,7 @@
 
       <button type="submit" class="login-btn">Entrar</button>
 
-      <div class="options">
-        <label><input type="checkbox" /> Lembre-se de mim</label>
-        <a href="#">Esqueceu a senha?</a>
-      </div>
+   
     </form>
 
     <div class="signup">
@@ -183,12 +180,14 @@
         // salvar token (lembrando: localStorage é simples, ok pra testes)
         localStorage.setItem('token', data.token);
 
+        localStorage.setItem('userId', data.user._id)
+
         msg.style.color = '#b3ffb3';
         msg.textContent = 'Login efetuado! Redirecionando...';
 
         // redireciona para a página principal / dashboard (troque o nome se quiser)
         setTimeout(() => {
-          window.location.href = 'telaprincipal.html'; // ou dashboard.html
+          window.location.href = 'home.html'; // ou dashboard.html
         }, 700);
 
       } catch (err) {

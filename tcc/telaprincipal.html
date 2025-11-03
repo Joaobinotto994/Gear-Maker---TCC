@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BoardMaker - Início</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -12,74 +13,161 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;;
       background-color: #111;
       color: #fff;
-      line-height: 1.6;
+    overflow-x: hidden;
     }
 
     /* Cabeçalho */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(6px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      z-index: 1000;
-    }
+header {
+  position: fixed;           /* mantém fixo */
+  top: 0;
+  left: 0;
+  width: 100%;
+   background-color: transparent; /* antes estava rgba(0,0,0,0.3) */
+  backdrop-filter: none;  /* igual à home */
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;          /* igual à home */
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* igual à home */
+}
 
-    header h1 {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #ff3333; /* vermelho */
-    }
+   
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* distância entre logo e nav */
+}
 
-    header nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      position: relative;
-    }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* distância entre os links */
+}
 
-    header input {
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      border: none;
-      outline: none;
-    }
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: color 0.3s;
+}
 
-    header .user {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #444;
-      cursor: pointer;
-      position: relative;
-    }
+.nav-links a:hover {
+  color: #e50914;
+}
 
-    /* Menu de usuário */
-    .user-menu {
-      display: none;
-      position: absolute;
-      top: 50px;
-      right: 0;
-      background: #222;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-    }
+.nav-links a.active {
+  color: #e50914; /* vermelho estilo Netflix */
+  font-weight: 600; /* opcional, deixa mais destacado */
+}
 
-    .user-menu button {
-      background: none;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      font-size: 1rem;
-    }
+.nav-links .criar-btn {
+  background: #e50914;
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.nav-links .criar-btn:hover {
+  background: #f40612;
+  transform: scale(1.05);
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Container da busca */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-container input {
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  position: absolute;
+  right: 0;
+}
+
+/* Lupa minimalista */
+.search-icon {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #fff; /* cor do SVG */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.search-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Input aparece quando ativo */
+.search-container.active input {
+  width: 150px;
+  opacity: 1;
+  padding: 4px 10px;
+}
+
+.user-menu img {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border: 1.5px solid #fff;
+  transition: transform 0.2s;
+}
+
+.user-menu img:hover {
+  transform: scale(1.1);
+}
+/* Avatar + Dropdown */
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #222;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+}
+.dropdown button {
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.dropdown button:hover {
+  color: #e50914;
+}
 
     /* Hero */
     .hero {
@@ -91,6 +179,7 @@
       text-align: center;
       position: relative;
       margin-top: 60px;
+      
     }
 
     .hero::after {
@@ -101,6 +190,7 @@
       width: 100%;
       height: 100px;
       background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #111 100%);
+      
     }
 
     .hero h2 {
@@ -130,66 +220,53 @@
     }
 
 .card {
-    position: relative;
-    background: #1e1e1e;
-    border-radius: 12px;
-    padding: 2rem 1rem;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-    min-height: 250px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Expande e dá sombra ao passar o mouse */
 .card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
-    z-index: 10; /* Fica acima dos outros cards */
+  transform: scale(1.04);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
-/* Container dos botões */
-.card-buttons {
-    position: absolute;
-    bottom: -50px; /* começa escondido */
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    opacity: 0;
-    transition: bottom 0.3s, opacity 0.3s;
+/* --- Parte da imagem --- */
+.card-image {
+  width: 100%;
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
 }
 
-/* Aparece quando passa o mouse */
-.card:hover .card-buttons {
-    bottom: 15px;
-    opacity: 1;
+/* --- Parte inferior com título --- */
+.card-info {
+  background: #1e1e1e;
+  padding: 1rem;
+  text-align: center;
 }
 
-.card-buttons button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    background: linear-gradient(135deg, #ff3333, #cc0000);
-    color: #fff;
-    transition: transform 0.2s, background 0.2s;
+.card-info h4 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin: 0;
 }
 
-.card-buttons button:hover {
-    transform: scale(1.1);
-    background: linear-gradient(135deg, #ff6666, #ff0000);
+.card-info small {
+  font-size: 0.85rem;
+  color: #aaa;
 }
 
-    .card h4 {
-      font-size: 1.1rem;
-      color: #ddd;
-    }
+.verified {
+  color: #4CAF50;
+  font-weight: bold;
+  margin-left: 5px;
+}
 
     /* Botão novo board */
     .novo-board {
@@ -223,30 +300,342 @@
         padding: 0.6rem 1.2rem;
       }
     }
+    /* --- Modal Overlay --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Aumenta a largura do modal */
+.modal-content {
+  display: flex;          /* garante layout horizontal */
+  flex-direction: row;    /* horizontal */
+  width: 90%;             /* aumenta um pouco a largura geral */
+  max-width: 1200px;
+  height: 70%;            /* altura do modal */
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.modal-left {
+  flex: 1 1 0;            /* ocupa a maior parte horizontal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  min-width: 0;           /* previne overflow do flex */
+}
+
+.modal-left img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+
+.modal-info h2 {
+  font-size: 1.8rem;
+  color: #ff3333;
+  margin-bottom: 5px;
+}
+
+.modal-user,
+.modal-creator {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin: 0;
+}
+
+.modal-description {
+  background: #2a2a2a;
+  padding: 12px;
+  border-radius: 8px;
+  color: #ddd;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-height: 160px;
+  overflow-y: auto;       /* ativa scroll vertical */
+  overflow-x: hidden;     /* impede scroll horizontal */
+  word-wrap: break-word;  /* quebra linhas longas */
+  white-space: normal;    /* permite quebra de linha natural */
+  scrollbar-width: thin;  /* scrollbar mais fina (Firefox) */
+}
+
+.modal-description::-webkit-scrollbar {
+  width: 6px;             /* scrollbar vertical fina */
+}
+
+.modal-description::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.modal-description::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+.modal-right {
+  flex: 0 0 300px;        /* largura fixa para as informações */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  overflow: auto;         /* caso o conteúdo exceda */
+}
+/* Botões do modal */
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+  color: #fff;
+  font-weight: bold;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.modal-buttons button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff6666, #ff0000);
+}
+
+/* Botão fechar */
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #fff;
+}
+.verified {
+    color: #4CAF50;
+    font-weight: bold;
+    margin-left: 5px;
+}
+/* Container dos botões Editar e Excluir */
+.edit-delete-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Proporções dos botões */
+.edit-delete-container button {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  transition: transform 0.2s, background 0.2s;
+  height: 40px; /* altura consistente com "Ver Pedalboard" */
+}
+
+#addToLibraryBtn {
+  flex: 0.7; /* 70% da largura total */
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+}
+
+#deleteBoardBtn {
+  flex: 0.3; /* 30% da largura total */
+  background: linear-gradient(135deg, #990000, #660000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+#addToLibraryBtn:hover,
+#deleteBoardBtn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff6666, #ff0000);
+}
+.viewBetterBtn {
+  height: 40px;
+}
+.card.verified-card {
+  background: linear-gradient(135deg, #0057ff, #0033aa);
+  box-shadow: 0 5px 15px rgba(0, 85, 255, 0.4);
+}
+
+.card.verified-card .card-info {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.card.verified-card h4 {
+  color: #fff;
+}
+
+.card.verified-card .verified {
+  color: #00ffea;
+}
+/* ==== Like (curtir) estilo Instagram ==== */
+.like-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s ease;
+  justify-content: center;
+}
+
+.like-container:hover {
+  transform: scale(1.05);
+}
+
+.like-icon {
+  font-size: 22px;
+  color: #bbb;
+  transition: color 0.3s ease;
+}
+
+.like-container.liked .like-icon {
+  color: #e0245e;
+}
+
+.like-count {
+  font-size: 16px;
+  color: #ddd;
+  font-weight: 500;
+}
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.4); }
+  60% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.like-btn.liked {
+  animation: heart-pop 0.3s ease;
+  color: red;
+}
+.logo {
+  font-size: 2rem; /* aumenta o tamanho do texto */
+  font-weight: 700; /* deixa mais grosso */
+  color: #e50914; /* vermelho estilo Netflix */
+  letter-spacing: 2px; /* opcional, dá espaçamento entre letras */
+}
+/* se quiser que a sectionSearchResults fique mais abaixo só quando em modo busca: */
+.avatar-preview img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #333;
+}
+
+.modal-avatar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-avatar-content {
+  background: #2c2a2a;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+body.avatar-modal-open {
+  overflow: hidden;
+}
+.avatar-preview img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #444;
+}
+
+
   </style>
 </head>
 <body>
 
   <!-- Cabeçalho -->
-  <header>
-    <h1>BoardMaker</h1>
-    <nav>
-      <input type="text" id="searchInput" placeholder="Pesquisar pedalboards...">
-      <div class="user" id="userBtn"></div>
-      <div class="user-menu" id="userMenu">
-        <button id="logoutBtn">Logout</button>
-      </div>
+ <header class="header">
+  <div class="header-left">
+    <div class="logo" hre>BOARDMAKER</div>
+    <nav class="nav-links">
+       <a href="home.html" id="btninicio">Inicio</a>
+      <a href="telaprincipal.html" id="btnPedalboards">Meus Pedalboards</a>
+      <a href="teladepedais.html" class="criar-btn">Criar</a>
     </nav>
-  </header>
+  </div>
+
+  <div class="right-section">
+    <div class="search-container"
+
+     
+      <input type="text" id="searchInput" placeholder="Buscar...">
+    </div>
+<div class="user-menu">
+  <img id="userAvatar" src="https://via.placeholder.com/40" alt="Usuário">
+  <div class="dropdown" id="userDropdown">
+    <button id="uploadAvatarBtn">Foto de perfil</button>
+    <button id="logoutBtn">Sair</button>
+  </div>
+</div>
+
+<!-- Modal de avatar -->
+<div id="avatarModal" class="modal-avatar">
+  <div class="modal-avatar-content" style="flex-direction: column; align-items: center; text-align: center; width: 350px; padding: 20px;">
+    <h3 style="color: #fff;">Adicionar foto de perfil</h3>
+    <div class="avatar-preview">
+      <img id="avatarPreview" src="https://via.placeholder.com/150" alt="Pré-visualização">
+    </div>
+    <input type="file" id="avatarInput" accept="image/*" style="margin: 15px 0;">
+    <div class="modal-buttons">
+      <button id="saveAvatarBtn">Salvar</button>
+      <button id="cancelAvatarBtn">Cancelar</button>
+    </div>
+  </div>
+</div>
+  </div>
+</header>
 
   <!-- Hero -->
   <section class="hero">
-    <h2 id="welcome">Bem-vindo!</h2>
+    <h2 id="welcome">Aqui estão seus Pedalboards!</h2>
   </section>
 
   <!-- Conteúdo -->
   <main>
-    <h3>Aqui estão os seus PedalBoards!!</h3>
 
     <div class="grid" id="pedalboardGrid">
       <!-- Os pedalboards do usuário vão aparecer aqui -->
@@ -254,6 +643,37 @@
 
     <button class="novo-board" id="createBoard">Criar novo Board</button>
   </main>
+  <!-- Modal de visualização do pedalboard -->
+<div id="viewPedalboardModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-left">
+      <img id="modalPedalboardImage" src="" alt="Pedalboard">
+    </div>
+    <div class="modal-right">
+      <span class="close-modal" id="closeModal">&times;</span>
+
+      <div class="modal-info">
+        <h2 id="modalPedalboardName">Nome do Pedalboard</h2>
+        <p class="modal-user" id="modalPedalboardArtist">De: Usuário</p>
+        <p class="modal-creator" id="modalPedalboardCreator">Artista: Fulano</p>
+        <p class="modal-description" id="modalPedalboardDescription">
+          Descrição do pedalboard aqui...
+        </p>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="viewBetterBtn">Ver Pedalboard</button>
+        <div class="edit-delete-container">
+          <button id="addToLibraryBtn">Editar</button>
+          <button id="deleteBoardBtn">🗑️</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <span class="close-modal" id="closeModal">&times;</span>
+  </div>
+</div>
 
 <script>
   // Pega token e nome do usuário do localStorage
@@ -261,64 +681,374 @@
   const userName = localStorage.getItem("userName");
   const welcome = document.getElementById("welcome");
   const pedalboardGrid = document.getElementById("pedalboardGrid");
-
+      const usuariosVerificadores = ["68f2ac44a5bc316f26869a43"];
+    const userId = localStorage.getItem("userId");
+const BASE_URL = "http://localhost:3000";
   // Mostra o nome do usuário
   if (userName) {
     welcome.textContent = `Bem-vindo, ${userName}`;
   }
 
+  // Seleção do modal e elementos internos
+  const modal = document.getElementById("viewPedalboardModal");
+  const modalImage = document.getElementById("modalPedalboardImage");
+  const modalName = document.getElementById("modalPedalboardName");
+  const modalArtist = document.getElementById("modalPedalboardArtist");
+  const modalCreator = document.getElementById("modalPedalboardCreator");
+  const modalDescription = document.getElementById("modalPedalboardDescription");
+  const closeModal = document.getElementById("closeModal");
+  const userAvatar = document.getElementById("userAvatar");
+const uploadAvatarBtn = document.getElementById("uploadAvatarBtn");
+const avatarModal = document.getElementById("avatarModal");
+const avatarInput = document.getElementById("avatarInput");
+const avatarPreview = document.getElementById("avatarPreview");
+const saveAvatarBtn = document.getElementById("saveAvatarBtn");
+const cancelAvatarBtn = document.getElementById("cancelAvatarBtn");
+const userDropdown = document.getElementById("userDropdown");
+
+// Função que realiza a pesquisa (igual à tela home)
+
+// Amarra o click da lupa à pesquisa
+
+
+const DEFAULT_AVATAR = "img/perfil.png"; // ou placeholder
+
+// Carrega avatar atual do usuário
+async function carregarAvatar() {
+  try {
+    const res = await fetch(`${BASE_URL}/usuarios/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const user = await res.json();
+      const avatarUrl = user.avatar ? `${BASE_URL}${user.avatar}` : DEFAULT_AVATAR;
+      userAvatar.src = avatarUrl;
+      avatarPreview.src = avatarUrl;
+    } else {
+      userAvatar.src = DEFAULT_AVATAR;
+      avatarPreview.src = DEFAULT_AVATAR;
+    }
+  } catch (err) {
+    console.error("Erro ao carregar avatar:", err);
+    userAvatar.src = DEFAULT_AVATAR;
+  }
+}
+carregarAvatar();
+
+// Abrir modal ao clicar em "Foto de perfil"
+uploadAvatarBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  avatarModal.style.display = "flex";
+  document.body.classList.add("avatar-modal-open"); // trava scroll
+  userDropdown.style.display = "none";
+});
+
+// Fechar modal ao clicar em cancelar ou fora
+cancelAvatarBtn.addEventListener("click", () => {
+  avatarModal.style.display = "none";
+  document.body.classList.remove("avatar-modal-open");
+  avatarInput.value = "";
+  avatarPreview.src = userAvatar.src;
+});
+avatarModal.addEventListener("click", (e) => {
+  if (e.target === avatarModal) {
+    avatarModal.style.display = "none";
+    document.body.classList.remove("avatar-modal-open");
+  }
+});
+
+// Pré-visualizar a imagem escolhida
+avatarInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) avatarPreview.src = URL.createObjectURL(file);
+});
+
+// Salvar avatar
+saveAvatarBtn.addEventListener("click", async () => {
+  const file = avatarInput.files[0];
+  if (!file) return alert("Escolha uma imagem!");
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const res = await fetch(`${BASE_URL}/upload`, { method: "POST", body: formData });
+    const data = await res.json();
+    if (data.src) {
+      await fetch(`${BASE_URL}/usuarios/me/avatar`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ avatar: data.src })
+      });
+      const novaUrl = `${BASE_URL}${data.src}`;
+      userAvatar.src = novaUrl;
+      avatarPreview.src = novaUrl;
+      avatarModal.style.display = "none";
+      document.body.classList.remove("avatar-modal-open");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao atualizar avatar!");
+  }
+});
+
+// Fecha dropdown do usuário ao clicar fora
+document.addEventListener("click", (e) => {
+  if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
+    userDropdown.style.display = "none";
+  }
+});
+
+// Toggle dropdown ao clicar no avatar
+userAvatar.addEventListener("click", (e) => {
+  e.stopPropagation();
+  userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
+});
+
+function abrirModal(board) {
+  modal.style.display = "flex";
+  modalImage.src = board.imagem ? `${BASE_URL}${board.imagem}` : "/img/default-pedalboard.png";
+  modalName.textContent = board.nome;
+  modalArtist.textContent = board.usuario?.nome ? `De: ${board.usuario.nome}` : "Usuário: Desconhecido";
+  modalCreator.textContent = board.artista ? `Artista: ${board.artista}` : "Artista: Não informado";
+  modalDescription.textContent = board.descricao || "Sem descrição";
+
+  // Botão "Ver melhor"
+  const viewBetterBtn = modal.querySelector(".viewBetterBtn");
+  viewBetterBtn.dataset.id = board._id;
+
+  // Limpa o container antes de reconstruir
+  const container = document.querySelector(".edit-delete-container");
+  container.innerHTML = "";
+
+  // 🔹 Se o pedalboard for do usuário logado
+  if (board.usuario?._id === userId) {
+    const editBtn = document.createElement("button");
+    editBtn.id = "addToLibraryBtn";
+    editBtn.textContent = "Editar";
+    editBtn.onclick = () => {
+      window.location.href = `teladepedais.html?id=${board._id}`;
+    };
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.id = "deleteBoardBtn";
+    deleteBtn.textContent = "🗑️";
+    deleteBtn.onclick = async () => {
+      const confirmar = confirm(`Deseja realmente excluir o pedalboard "${board.nome}"?`);
+      if (!confirmar) return;
+
+      try {
+        const res = await fetch(`${BASE_URL}/pedalboards/${board._id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (res.ok) {
+          alert("Pedalboard excluído com sucesso!");
+          modal.style.display = "none";
+          const card = [...document.querySelectorAll(".card")].find(c => c.querySelector("h4")?.textContent.includes(board.nome));
+          if (card) card.remove();
+        } else {
+          const data = await res.json();
+          alert(data.error || "Erro ao excluir pedalboard");
+        }
+      } catch (err) {
+        console.error("Erro ao excluir:", err);
+        alert("Erro ao excluir pedalboard");
+      }
+    };
+
+    container.appendChild(editBtn);
+    container.appendChild(deleteBtn);
+  } 
+  // 🔹 Se o pedalboard for de outro usuário
+  else {
+    // Botão "Add"
+    const addBtn = document.createElement("button");
+    addBtn.id = "addToLibraryBtn";
+    addBtn.textContent = "Add";
+    addBtn.onclick = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/pedalboards/duplicar/${board._id}`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (res.ok) alert("Pedalboard adicionado à sua biblioteca!");
+        else alert("Erro ao adicionar o pedalboard.");
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao adicionar o pedalboard.");
+      }
+    };
+
+// ----- Like (curtir) dentro do modal -----
+const likeContainer = document.createElement("div");
+likeContainer.className = "like-container";
+
+const heartIcon = document.createElement("i");
+heartIcon.className = "fa-regular fa-heart like-icon";
+
+const likeCount = document.createElement("span");
+likeCount.className = "like-count";
+likeCount.textContent = Array.isArray(board.likes) ? board.likes.length : 0;
+
+// Verifica se o usuário já curtiu
+if (Array.isArray(board.likes) && board.likes.includes(userId)) {
+  heartIcon.classList.replace("fa-regular", "fa-solid");
+  likeContainer.classList.add("liked");
+}
+
+likeContainer.appendChild(heartIcon);
+likeContainer.appendChild(likeCount);
+
+// Evento curtir/descurtir
+likeContainer.addEventListener("click", async (e) => {
+  e.stopPropagation();
+  const liked = likeContainer.classList.toggle("liked");
+  if (liked) heartIcon.classList.replace("fa-regular", "fa-solid");
+  else heartIcon.classList.replace("fa-solid", "fa-regular");
+
+  try {
+    const res = await fetch(`${BASE_URL}/pedalboards/${board._id}/curtir`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    likeCount.textContent = data.totalLikes;
+
+    // 🔹 Atualiza o board localmente para que futuras renderizações fiquem corretas
+    if (liked) {
+      if (!Array.isArray(board.likes)) board.likes = [];
+      board.likes.push(userId);
+    } else {
+      board.likes = board.likes.filter(uid => uid !== userId);
+    }
+
+  } catch (err) {
+    console.error("Erro ao curtir:", err);
+  }
+});
+
+    // Adiciona Add + Like dentro do container
+    container.appendChild(addBtn);
+    // Adiciona dentro do container do modal
+container.appendChild(likeContainer);
+  }
+}
+
+  // Fecha modal
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  // Fecha modal clicando fora do conteúdo
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) modal.style.display = "none";
+  });
 function criarCard(board) {
     const card = document.createElement("div");
     card.className = "card";
 
-    card.innerHTML = `
-        <h4>${board.nome}${board.usuario?.nome ? ` <small>(de ${board.usuario.nome})</small>` : ""}</h4>
-        <div class="card-buttons">
-            <button class="ver-btn">Ver</button>
-            <button class="editar-btn">Editar</button>
-            <button class="excluir-btn">Excluir</button>
-        </div>
-    `;
+    // Se o pedalboard for verificado, adiciona a classe azul
+    if (board.verified) {
+        card.classList.add("verified-card");
+    }
 
-    pedalboardGrid.appendChild(card);
+    // ----- Parte da imagem -----
+    const cardImage = document.createElement("div");
+    cardImage.className = "card-image";
 
-    // Botão Ver
-    card.querySelector(".ver-btn").addEventListener("click", () => {
-        alert("Implementar visualização do pedalboard");
-    });
+    if (board.imagemCard) {
+        cardImage.style.backgroundImage = `url('${BASE_URL}${board.imagemCard}')`;
+    } else if (board.imagem) {
+        cardImage.style.backgroundImage = `url('${BASE_URL}${board.imagem}')`;
+    } else {
+        cardImage.style.background = "#333"; // fallback
+    }
 
-    // Botão Editar → redireciona para tela de pedais
-    card.querySelector(".editar-btn").addEventListener("click", () => {
-        window.location.href = `teladepedais.html?id=${board._id}`;
-    });
+    // ----- Parte inferior com nome -----
+    const cardInfo = document.createElement("div");
+    cardInfo.className = "card-info";
 
-// Botão Excluir → chama API DELETE
-card.querySelector(".excluir-btn").addEventListener("click", async () => {
-    if (!confirm(`Deseja realmente excluir o pedalboard "${board.nome}"?`)) return;
+    const title = document.createElement("h4");
+    title.textContent = board.nome;
 
-    try {
-        const res = await fetch(`http://localhost:3000/pedalboards/${board._id}`, {
-            method: "DELETE",
-            headers: { 
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
+    if (board.usuario?.nome) {
+        const small = document.createElement("small");
+        small.textContent = ` (de ${board.usuario.nome})`;
+        title.appendChild(small);
+    }
+
+    if (board.verified) {
+        const verifiedBadge = document.createElement("span");
+        verifiedBadge.classList.add("verified");
+        verifiedBadge.textContent = " ✔️";
+        title.appendChild(verifiedBadge);
+    }
+
+    cardInfo.appendChild(title);
+
+
+    // ----- Junta tudo -----
+    card.appendChild(cardImage);
+    card.appendChild(cardInfo);
+
+    // ----- Botão "Verificar" (mantido) -----
+
+    if (!board.verified && usuariosVerificadores.includes(userId)) {
+        const verifyBtn = document.createElement("button");
+        verifyBtn.textContent = "Verificar";
+        verifyBtn.classList.add("verify-btn");
+        verifyBtn.style.marginTop = "12px";
+        verifyBtn.style.padding = "6px 10px";
+        verifyBtn.style.borderRadius = "6px";
+
+        verifyBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            try {
+                const res = await fetch(`${BASE_URL}/pedalboards/${board._id}/verificar`, {
+                    method: "PATCH",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (res.ok) {
+                    alert("Pedalboard verificado!");
+                    board.verified = true;
+                    const verifiedBadge = document.createElement("span");
+                    verifiedBadge.classList.add("verified");
+                    verifiedBadge.textContent = " ✔️";
+                    title.appendChild(verifiedBadge);
+                    verifyBtn.remove();
+                } else {
+                    const data = await res.json().catch(() => ({}));
+                    alert(data.error || "Erro ao verificar pedalboard");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao verificar pedalboard");
             }
         });
 
-        if (res.ok) {
-            alert("Pedalboard excluído com sucesso!");
-            card.remove(); // remove o card direto da tela
-            // carregarMeusBoards();  // se preferir recarregar toda a lista, pode deixar essa linha
-        } else {
-            const errData = await res.json();
-            alert("Erro ao excluir: " + (errData.error || "Desconhecido"));
-        }
-    } catch (err) {
-        console.error("Erro ao excluir pedalboard:", err);
-        alert("Erro ao excluir pedalboard");
+        cardInfo.appendChild(verifyBtn);
     }
-});
+
+    // ----- Evento de clique -----
+    card.addEventListener("click", (e) => {
+        if (e.target.tagName.toLowerCase() === "button") return;
+        abrirModal(board);
+    });
+
+    // Adiciona ao grid
+    pedalboardGrid.appendChild(card);
 }
+
+
   // Carrega pedalboards do usuário logado
   async function carregarMeusBoards() {
     try {
@@ -365,11 +1095,9 @@ card.querySelector(".excluir-btn").addEventListener("click", async () => {
   });
 
   // Menu do usuário
-  const userBtn = document.getElementById("userBtn");
-  const userMenu = document.getElementById("userMenu");
-  userBtn.addEventListener("click", () => {
-    userMenu.style.display = userMenu.style.display === "block" ? "none" : "block";
-  });
+ 
+  
+ 
 
   // Logout
   document.getElementById("logoutBtn").addEventListener("click", () => {
@@ -377,6 +1105,16 @@ card.querySelector(".excluir-btn").addEventListener("click", async () => {
     localStorage.removeItem("userName");
     window.location.href = "login.html";
   });
+document.querySelectorAll(".viewBetterBtn").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    const boardId = e.currentTarget.dataset.id;
+    if (!boardId) {
+      alert("ID do pedalboard não definido!");
+      return;
+    }
+    window.location.href = `verpedalboard.html?id=${boardId}`;
+  });
+});
 
   // Criar novo pedalboard → leva para tela de criação com parâmetro
   document.getElementById("createBoard").addEventListener("click", () => {

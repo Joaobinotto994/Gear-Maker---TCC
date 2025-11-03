@@ -8,7 +8,11 @@ const PedalSchema = new mongoose.Schema({
   usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // dono do pedal
   widthCm: { type: Number, default: 8 },   // largura em cm (opcional)
   heightCm: { type: Number, default: 8 },  // altura em cm (opcional)
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  verified: {
+  type: Boolean,
+  default: false
+}
 });
 
 module.exports = mongoose.model('Pedal', PedalSchema);
