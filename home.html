@@ -14,16 +14,16 @@
   overflow-x: hidden;
 }
 
-/* ===== HEADER NETFLIX ESTILO PROFISSIONAL ===== */
+
 .header {
   display: flex;
-  justify-content: space-between; /* mantém o logo+links à esquerda e usuário à direita */
+  justify-content: space-between; 
   align-items: center;
   padding: 12px 20px;
   position: sticky;
   top: 0;
   z-index: 999;
-    background-color: transparent; /* antes estava rgba(0,0,0,0.3) */
+    background-color: transparent; 
   backdrop-filter: none; 
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
@@ -32,13 +32,13 @@
 .header-left {
   display: flex;
   align-items: center;
-  gap: 15px; /* distância entre logo e nav */
+  gap: 15px; 
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 12px; /* distância entre os links */
+  gap: 12px; 
 }
 
 .nav-links a {
@@ -54,8 +54,8 @@
 }
 
 .nav-links a.active {
-  color: #e50914; /* vermelho estilo Netflix */
-  font-weight: 600; /* opcional, deixa mais destacado */
+  color: #e50914; 
+  font-weight: 600; 
 }
 
 .nav-links .criar-btn {
@@ -79,7 +79,7 @@
   gap: 12px;
 }
 
-/* Container da busca */
+
 .search-container {
   position: relative;
   display: flex;
@@ -101,13 +101,12 @@
   right: 0;
 }
 
-/* Lupa minimalista */
 .search-icon {
   width: 32px;
   height: 32px;
   border: none;
   background: transparent;
-  color: #fff; /* cor do SVG */
+  color: #fff; 
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -119,7 +118,7 @@
   transform: scale(1.1);
 }
 
-/* Input aparece quando ativo */
+
 .search-container.active input {
   width: 150px;
   opacity: 1;
@@ -138,7 +137,7 @@
 .user-menu img:hover {
   transform: scale(1.1);
 }
-/* Avatar + Dropdown */
+
 
 .dropdown {
   display: none;
@@ -161,7 +160,6 @@
   color: #e50914;
 }
 
-/* Cards estilo Netflix */
 .main-content {
   padding: 20px 40px;
 }
@@ -171,21 +169,21 @@
 }
 .category h2 {
   margin-left: 60px;
-  font-size: 1.4rem; /* tamanho levemente reduzido */
+  font-size: 1.4rem; 
   color: #fff;
   font-weight: 600;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  margin-bottom: 6px; /* mantém o título bem próximo dos cards */
+  margin-bottom: 6px; 
   letter-spacing: 0.5px;
 }
 
 
-/* Container tipo carrossel */
+
 .cards-container {
-  display: grid; /* grid permite centralização */
-  grid-auto-flow: column; /* mantém na horizontal */
+  display: grid; 
+  grid-auto-flow: column; 
   grid-gap: 20px;
-  justify-content: start; /* padrão */
+  justify-content: start; 
   overflow-x: auto;
   scroll-behavior: smooth;
   padding: 10px 50px;
@@ -195,8 +193,7 @@
   display: none;
 }
 
-/* Card (igual ao da tela principal) */
-/* ===== Cada card individual ===== */
+
 .card {
   width: clamp(220px, 18vw, 320px);
   height: 180px;
@@ -205,7 +202,7 @@
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  flex: 0 0 auto; /* tamanho fixo */
+  flex: 0 0 auto; 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -213,7 +210,7 @@
 
 .card img {
   width: 100%;
-  height: 60%;              /* parte da imagem no topo */
+  height: 60%;              
   object-fit: cover;
 }
 
@@ -239,19 +236,19 @@
   margin-top: 4px;
 }
 
-/* Efeito hover */
+
 .card:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
-/* ===== Centralização e limite de 5 por linha ===== */
+
 @media (min-width: 1400px) {
   .cards-container {
-    max-width: 1600px; /* limite total */
+    max-width: 1600px; 
   }
 }
-/* --- Modal Overlay --- */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -265,7 +262,7 @@
   z-index: 9999;
 }
 
-/* Modal content */
+
 .modal-content {
   display: flex;
   flex-direction: row;
@@ -417,7 +414,7 @@
   background: linear-gradient(135deg, #ff6666, #ff0000);
 }
 
-/* Like estilo Instagram */
+
 .like-container {
   display: flex;
   align-items: center;
@@ -480,16 +477,16 @@
   animation: heart-pop 0.3s ease;
   color: red;
 }
-/* === Carrossel com setas estilo Netflix === */
+
 
 .carousel-wrapper {
   position: relative;
   overflow: hidden;
-  padding: 0 0 5px 0; /* quase encostado nos títulos */
+  padding: 0 0 5px 0; 
 }
 
 .cards-container.few-cards {
-  justify-content: center; /* centraliza quando tiver poucos cards */
+  justify-content: center; 
 }
 .scroll-btn {
   position: absolute;
@@ -521,14 +518,13 @@
   right: 0;
 }
 
-/* ===== HERO CAROUSEL ===== */
 .hero-carousel {
   position: relative;
   width: 100%;
   height: 70vh;
   overflow: hidden;
-    margin-top: -60px; /* ajusta conforme altura do header */
-  z-index: 0; /* garante que fique atrás do header */
+    margin-top: -60px; 
+  z-index: 0; 
   position: relative;
 }
 .hero-carousel::before {
@@ -559,7 +555,6 @@
   z-index: 1;
 }
 
-/* Gradiente sobre as imagens */
 .hero-slide::before {
   content: "";
   position: absolute;
@@ -600,7 +595,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
-  text-decoration: none; /* remove o underline do link */
+  text-decoration: none; 
 }
 
 .hero-btn.play {
@@ -623,7 +618,6 @@
   transform: scale(1.05);
 }
 
-/* Setas de navegação */
 .carousel-btn {
   position: absolute;
   top: 50%;
@@ -655,18 +649,18 @@
   right: 15px;
 }
 .logo {
-  font-size: 2rem; /* aumenta o tamanho do texto */
-  font-weight: 700; /* deixa mais grosso */
-  color: #e50914; /* vermelho estilo Netflix */
-  letter-spacing: 2px; /* opcional, dá espaçamento entre letras */
+  font-size: 2rem; 
+  font-weight: 700; 
+  color: #e50914; 
+  letter-spacing: 2px; 
 }
 .header.scrolled {
-  background-color: #000; /* fundo preto */
-  backdrop-filter: blur(10px); /* mantém o blur se quiser */
+  background-color: #000; 
+  backdrop-filter: blur(10px); 
   -webkit-backdrop-filter: blur(10px);
-  transition: background-color 0.3s ease; /* suaviza a transição */
+  transition: background-color 0.3s ease; 
 }
-/* ===== FOOTER ===== */
+
 .footer {
   background-color: #1a1a1a;
   color: #ccc;
@@ -701,16 +695,16 @@
   }
 }
 body.modo-busca {
-  background-color: #111; /* fundo escuro como a Netflix */
+  background-color: #111; 
   transition: background 0.3s ease;
 }
-/* controle via classe no body: evita usar style.display inline */
+
 body.modo-busca .hero-carousel,
 body.modo-busca footer {
   display: none !important;
 }
 #sectionSearchResults {
-  margin-top: 0; /* remover margin-top fixa fora do modo-busca */
+  margin-top: 0; 
   padding: 0 60px;
 }
 
@@ -720,9 +714,9 @@ body.modo-busca footer {
   justify-content: center;
   gap: 20px;
 }
-/* se quiser que a sectionSearchResults fique mais abaixo só quando em modo busca: */
+
 body.modo-busca #sectionSearchResults {
-  margin-top: 20px; /* ajuste fino, se necessário */
+  margin-top: 20px; 
 }
 .avatar-preview img {
   width: 150px;
@@ -765,10 +759,39 @@ body.avatar-modal-open {
   border: 2px solid #444;
 }
 
-
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  backdrop-filter: blur(3px);
+}
+.spinner {
+  border: 6px solid #444;
+  border-top: 6px solid #fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
   </style>
 </head>
 <body>
+
+  <div id="loader" class="loader-overlay">
+  <div class="spinner"></div>
+</div>
 <header class="header">
   <div class="header-left">
     <div class="logo">BOARDMAKER</div>
@@ -814,7 +837,6 @@ body.avatar-modal-open {
   <div class="right-section">
 <div class="search-container">
   <button id="searchBtn" class="search-icon" aria-label="Pesquisar">
-    <!-- Lupa SVG inline -->
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"/>
     </svg>
@@ -829,7 +851,7 @@ body.avatar-modal-open {
   </div>
 </div>
 
-<!-- Modal de avatar -->
+<!--avatar -->
 
 <div id="avatarModal" class="modal-avatar">
   <div class="modal-avatar-content" style="flex-direction: column; align-items: center; text-align: center; width: 350px; padding: 20px;">
@@ -846,8 +868,7 @@ body.avatar-modal-open {
 </div>
 </header>
 
-  <!-- Banner estilo Netflix -->
-<!-- HERO CAROUSEL -->
+<!--carousel -->
 <section class="hero-carousel">
   <div class="hero-slide active" style="background-image: url('img/photo-1560849898-d058f7d93b23.jpg-1-1.jpg');">
     <div class="hero-content">
@@ -882,10 +903,11 @@ body.avatar-modal-open {
     </div>
   </div>
 
-  <!-- Botões de navegação -->
+  <!--navegação -->
   <button class="carousel-btn left">&#10094;</button>
   <button class="carousel-btn right">&#10095;</button>
 </section>
+<!--adição para o futuro, sessão de "pedalboards recomendados"-->
  <!-- <section class="category" id="sectionRecommended">
   <h2>Talvez você goste</h2>
   <div class="carousel-wrapper">
@@ -920,8 +942,7 @@ body.avatar-modal-open {
     <button class="scroll-btn right" data-target="likedPedalboardsByUser">&#10095;</button>
   </div>
 </section>
-  <!-- Modal -->
-<!-- Modal de visualização do pedalboard -->
+<!--visualização do pedalboard -->
 <div id="modal" class="modal-overlay">
   <div class="modal-content">
     <div class="modal-left">
@@ -947,8 +968,6 @@ body.avatar-modal-open {
   </div>
 </div>
 
-
-<!-- ===== FOOTER ===== -->
 <footer class="footer">
   <div class="footer-content">
     <div class="footer-info">
@@ -962,7 +981,7 @@ body.avatar-modal-open {
 </footer>
 
 <script>
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://boardmakerback.onrender.com";
 const token = localStorage.getItem("token");
 const userId = token ? JSON.parse(atob(token.split(".")[1])).id : null;
 const searchContainer = document.querySelector('.search-container');
@@ -987,11 +1006,19 @@ const cancelAvatarBtn = document.getElementById("cancelAvatarBtn");
   const modal = document.getElementById("modal");
   const closeModal = document.querySelector(".close-modal");
 
+function showLoader() {
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "flex";
+}
+
+function hideLoader() {
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "none";
+}
 
 
 
-
-// ====== FUNÇÃO GLOBAL PARA ABRIR MODAL ======
+//função global para abrir modal
 function abrirModal(board) {
   const modal = document.getElementById("modal");
   const modalImage = document.getElementById("modalImage");
@@ -1001,7 +1028,8 @@ function abrirModal(board) {
   const modalDescription = document.getElementById("modalDescription");
 
   modal.style.display = "flex";
-  modalImage.src = board.imagem ? `${BASE_URL}${board.imagem}` : "/img/default-pedalboard.png";
+  const imgUrl = board.imagem || '/img/default-pedalboard.png';
+modalImage.src = imgUrl.startsWith('http') ? imgUrl : `${BASE_URL}${imgUrl}`;
   modalName.textContent = board.nome;
   modalArtist.textContent = board.usuario?.nome ? `De: ${board.usuario.nome}` : "Usuário: Desconhecido";
   modalCreator.textContent = board.artista ? `Artista: ${board.artista}` : "Artista: Não informado";
@@ -1012,6 +1040,36 @@ function abrirModal(board) {
 
   const container = modal.querySelector(".edit-delete-container");
   container.innerHTML = "";
+
+  if (!board.verificado) {
+  const verifyBtn = document.createElement("button");
+  verifyBtn.id = "verifyBoardBtn";
+  verifyBtn.textContent = "Verificar ✔";
+
+  verifyBtn.onclick = async () => {
+    if (!confirm("Deseja marcar este pedalboard como VERIFICADO?")) return;
+
+    try {
+      const res = await fetch(`${BASE_URL}/pedalboards/${board._id}/verificar`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+
+      if (res.ok) {
+        alert("Pedalboard verificado com sucesso!");
+        modal.style.display = "none";
+        location.reload(); 
+      } else {
+        alert("Erro ao verificar pedalboard.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao verificar pedalboard.");
+    }
+  };
+
+  container.appendChild(verifyBtn);
+}
 
   if (board.usuario?._id === userId) {
     const editBtn = document.createElement("button");
@@ -1100,7 +1158,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
  const userAvatar = document.getElementById("userAvatar");
   const DEFAULT_AVATAR = "img/perfil.png"; 
-   // === Carrega avatar do usuário ou usa o padrão ===
+
   try {
     const res = await fetch(`${BASE_URL}/usuarios/me`, {
       headers: { Authorization: `Bearer ${token}` }
@@ -1108,9 +1166,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 if (res.ok) {
   const user = await res.json();
-  const avatarUrl = user.avatar ? `${BASE_URL}${user.avatar}` : DEFAULT_AVATAR;
+  const avatarUrl = user.avatar
+  ? (user.avatar.startsWith('http') ? user.avatar : `${BASE_URL}${user.avatar}`)
+  : DEFAULT_AVATAR;
 
-  // Atualiza os dois previews
   userAvatar.src = avatarUrl;
   avatarPreview.src = avatarUrl;
 } else {
@@ -1122,65 +1181,65 @@ if (res.ok) {
     userAvatar.src = DEFAULT_AVATAR;
   }
 
- async function mostrarTodosEstilos() {
-    try {
-      const res = await fetch(`${BASE_URL}/todos-pedalboards`, {
-        headers: { Authorization: `Bearer ${token}` }
+async function mostrarTodosEstilos() {
+  try {
+    const res = await fetch(`${BASE_URL}/todos-pedalboards`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    const pedalboards = data.pedalboards || []; 
+
+    const pedalboardsPorEstilo = {};
+    pedalboards.forEach(p => {
+      if (!p.estilo) return;
+      const estilos = Array.isArray(p.estilo) ? p.estilo : [p.estilo];
+      estilos.forEach(estilo => {
+        if (!pedalboardsPorEstilo[estilo]) pedalboardsPorEstilo[estilo] = [];
+        pedalboardsPorEstilo[estilo].push(p);
       });
-      const data = await res.json();
+    });
 
-      // Agrupar pedalboards por estilo
-     // Agrupar pedalboards por estilo (considerando múltiplos estilos)
-const pedalboardsPorEstilo = {};
-data.pedalboards.forEach(p => {
-  if (!p.estilo) return;
+Object.entries(pedalboardsPorEstilo).forEach(([estilo, lista]) => {
+  if (lista.length === 0) return;
 
-  // garante que seja sempre array
-  const estilos = Array.isArray(p.estilo) ? p.estilo : [p.estilo];
+  if (document.querySelector(`section.category.estilo-dinamico h2:nth-of-type(1)`)?.textContent === estilo) return;
 
-  estilos.forEach(estilo => {
-    if (!pedalboardsPorEstilo[estilo]) pedalboardsPorEstilo[estilo] = [];
-    pedalboardsPorEstilo[estilo].push(p);
-  });
-});
-      // Cria uma section por estilo
-      Object.entries(pedalboardsPorEstilo).forEach(([estilo, lista]) => {
-        if (lista.length === 0) return;
-
-        const section = document.createElement("section");
-        section.className = "category estilo-dinamico";
-        section.innerHTML = `
-          <h2>${estilo}</h2>
-          <div class="carousel-wrapper">
-            <button class="scroll-btn left" data-target="boards-${estilo}">&#10094;</button>
-            <div class="cards-container" id="boards-${estilo}"></div>
-            <button class="scroll-btn right" data-target="boards-${estilo}">&#10095;</button>
-          </div>
-        `;
-
-        const footer = document.querySelector("footer");
-        document.body.insertBefore(section, footer);
-
-        const container = section.querySelector(".cards-container");
-        lista.forEach(p => container.appendChild(criarCard(p)));
-      });
-
-      centralizarCards();
-      atualizarSetas();
-
-    } catch (err) {
-      console.error("Erro ao carregar pedalboards por estilo:", err);
-    }
+  if (document.querySelectorAll(`section.category h2`).length) {
+    const existe = Array.from(document.querySelectorAll('section.category h2'))
+                        .some(h2 => h2.textContent === estilo);
+    if (existe) return;
   }
 
-  await mostrarTodosEstilos(); // chama no carregamento da home
+  const section = document.createElement("section");
+  section.className = "category estilo-dinamico";
+  section.innerHTML = `
+    <h2>${estilo}</h2>
+    <div class="carousel-wrapper">
+      <button class="scroll-btn left" data-target="boards-${estilo}">&#10094;</button>
+      <div class="cards-container" id="boards-${estilo}"></div>
+      <button class="scroll-btn right" data-target="boards-${estilo}">&#10095;</button>
+    </div>
+  `;
 
-  // ===== Select de filtro por estilo =====
+  const footer = document.querySelector("footer");
+  document.body.insertBefore(section, footer);
+
+  const container = section.querySelector(".cards-container");
+  lista.forEach(p => container.appendChild(criarCard(p)));
+});
+    centralizarCards();
+    atualizarSetas();
+  } catch (err) {
+    console.error("Erro ao carregar pedalboards por estilo:", err);
+  }
+}
+  await mostrarTodosEstilos(); 
+
+  // filtro por estilo 
   document.getElementById("filtroEstilo").addEventListener("change", (e) => {
     const estiloSelecionado = e.target.value;
 
     if (!estiloSelecionado || estiloSelecionado === "Todos Estilos") {
-      // rola para o topo da página
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -1196,7 +1255,7 @@ data.pedalboards.forEach(p => {
     if (targetSection) {
       const headerOffset = document.querySelector('.header')?.offsetHeight || 0;
       const sectionTop = targetSection.getBoundingClientRect().top + window.scrollY;
-      const scrollTo = sectionTop - headerOffset - 20; // 20px extra de margem
+      const scrollTo = sectionTop - headerOffset - 20; 
       window.scrollTo({ top: scrollTo, behavior: 'smooth' });
     }
   });
@@ -1207,33 +1266,30 @@ data.pedalboards.forEach(p => {
   });
 
 userAvatar.addEventListener("click", (e) => {
-  e.stopPropagation(); // evita fechar o dropdown ao clicar de novo
+  e.stopPropagation(); 
   userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
 });
 
-// Fecha dropdown ao clicar fora
 document.addEventListener("click", (e) => {
   if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
     userDropdown.style.display = "none";
   }
 });
 
-// Abre modal ao clicar em “Foto de perfil”
+//  modal ao clicar na foto de perfil
 uploadAvatarBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   avatarModal.style.display = "flex";
-  document.body.classList.add("avatar-modal-open"); // 👈 trava o scroll
+  document.body.classList.add("avatar-modal-open");
   userDropdown.style.display = "none";
 });
 
-// Fecha modal
 cancelAvatarBtn.addEventListener("click", () => {
   avatarModal.style.display = "none";
   document.body.classList.remove("avatar-modal-open");
 
-  // Limpa o arquivo escolhido
   avatarInput.value = "";
-  // Restaura o preview para o avatar atual do usuário
+
   const userAvatar = document.getElementById("userAvatar");
   avatarPreview.src = userAvatar.src;
 });
@@ -1254,18 +1310,6 @@ avatarModal.addEventListener("click", (e) => {
   await carregarPedalboardsCurtidosPorUsuario();
   await carregarTalvezGoste();
 
-
-
-
-
-// abrir modal
-// abrir modal
-
-
-// também fecha se clicar fora
-
-
-// pré-visualizar imagem escolhida
 avatarInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -1280,12 +1324,10 @@ saveAvatarBtn.addEventListener("click", async () => {
   const formData = new FormData();
   formData.append("file", file);
 
-  // upload para backend
   const res = await fetch(`${BASE_URL}/upload`, { method: "POST", body: formData });
   const data = await res.json();
 
   if (data.src) {
-    // atualizar avatar no usuário
     const token = localStorage.getItem("token");
     await fetch(`${BASE_URL}/usuarios/me/avatar`, {
       method: "PUT",
@@ -1296,12 +1338,9 @@ saveAvatarBtn.addEventListener("click", async () => {
       body: JSON.stringify({ avatar: data.src })
     });
 
-    // atualizar avatar na tela (header e modal)
     const novaUrl = `${BASE_URL}${data.src}`;
     userAvatar.src = novaUrl;
     avatarPreview.src = novaUrl;
-
-    // fecha o modal
     avatarModal.style.display = "none";
     document.body.classList.remove("avatar-modal-open");
   }
@@ -1313,7 +1352,7 @@ saveAvatarBtn.addEventListener("click", async () => {
 
     if (!container) return;
 
-    const scrollAmount = 300; // distância por clique
+    const scrollAmount = 300; 
     if (btn.classList.contains("left")) {
       container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
     } else {
@@ -1334,18 +1373,27 @@ saveAvatarBtn.addEventListener("click", async () => {
  const btnPedalboards = document.getElementById('btnPedalboards');
   const btnArtistas = document.getElementById('btnArtistas');
   const btnPedais = document.getElementById('btnPedais');
-
   const telaPrincipal = document.getElementById('telaprincipal');
   const telaArtistas = document.getElementById('telaArtistas');
   const telaPedais = document.getElementById('telaPedais');
 
   const links = document.querySelectorAll('.nav-links a');
 
+  showLoader();
+
+  await Promise.all([
+    carregarPedalboardsVerificados(token),
+    carregarMaisCurtidos(token),
+    carregarPedalboardsCurtidosPorUsuario(),
+    mostrarTodosEstilos()
+  ]);
+
+  hideLoader(); 
 
 });
 
 
-// ====== FUNÇÕES DE CARREGAMENTO ======
+// funções de carregamento
 async function carregarPedalboardsVerificados(token) {
   const container = document.getElementById("verifiedBoards");
   container.innerHTML = "<p>Carregando...</p>";
@@ -1355,15 +1403,19 @@ async function carregarPedalboardsVerificados(token) {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
-    const pedalboards = data.pedalboards.filter(p => p.verified);
+    const pedalboards = data.pedalboards || []; 
 
+    const verificados = pedalboards.filter(p => p.verified);
     container.innerHTML = "";
-    pedalboards.forEach(p => container.appendChild(criarCard(p)));
+    verificados.forEach(p => container.appendChild(criarCard(p)));
 
     centralizarCards();
-    atualizarSetas(); // <-- adiciona isso aqui
+    atualizarSetas();
   } catch {
     container.innerHTML = "<p>Erro ao carregar pedalboards verificados</p>";
+  }
+   finally {
+    hideLoader(); 
   }
 }
 
@@ -1376,8 +1428,9 @@ async function carregarMaisCurtidos(token) {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
+    const pedalboards = data.pedalboards || []; 
 
-    const ordenados = data.pedalboards
+    const ordenados = pedalboards
       .filter(p => p.likes?.length > 0)
       .sort((a, b) => b.likes.length - a.likes.length)
       .slice(0, 10);
@@ -1386,13 +1439,14 @@ async function carregarMaisCurtidos(token) {
     ordenados.forEach(p => container.appendChild(criarCard(p)));
 
     centralizarCards();
-    atualizarSetas(); // <-- e aqui também
+    atualizarSetas();
   } catch {
     container.innerHTML = "<p>Erro ao carregar pedalboards curtidos</p>";
   }
+     finally {
+    hideLoader(); 
+  }
 }
-
-// Função para carregar pedalboards curtidos pelo usuário
 async function carregarPedalboardsCurtidosPorUsuario() {
   try {
     if (!userId) return;
@@ -1407,11 +1461,11 @@ async function carregarPedalboardsCurtidosPorUsuario() {
     container.innerHTML = "";
 
     if (!pedalboards.length) {
-      section.style.display = "none"; // oculta a seção se não houver curtidos
+      section.style.display = "none"; 
       return;
     }
 
-    section.style.display = "block"; // garante que a seção apareça
+    section.style.display = "block"; 
     pedalboards.forEach(board => {
       const card = criarCard(board);
       container.appendChild(card);
@@ -1423,15 +1477,17 @@ async function carregarPedalboardsCurtidosPorUsuario() {
   } catch (err) {
     console.error("Erro ao carregar pedalboards curtidos:", err);
   }
+     finally {
+    hideLoader(); 
+  }
 }
-
+// função para adições futuras dos "pedalboards recomendados"
 async function carregarTalvezGoste() {
   try {
     if (!userId) return;
 
     let sugestoes = [];
 
-    // 1️⃣ Tentar pegar sugestões inteligentes do backend
     const res = await fetch(`${BASE_URL}/pedalboards/sugeridos/${userId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -1440,7 +1496,6 @@ async function carregarTalvezGoste() {
       sugestoes = await res.json();
     }
 
-    // 2️⃣ Se o usuário for novo (sem sugestões), pegar pedalboards aleatórios
     if (!sugestoes.length) {
       const resAleatorio = await fetch(`${BASE_URL}/pedalboards/aleatorios?limite=10`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -1453,7 +1508,6 @@ async function carregarTalvezGoste() {
     const section = document.getElementById('sectionRecommended');
     const container = document.getElementById('recommendedBoards');
 
-    // 3️⃣ Se ainda não houver nada, não mostrar a seção
     if (!sugestoes.length) {
       section.style.display = 'none';
       return;
@@ -1461,7 +1515,6 @@ async function carregarTalvezGoste() {
       section.style.display = 'block';
     }
 
-    // 4️⃣ Limpar container e renderizar os cards
     container.innerHTML = '';
     sugestoes.forEach(board => {
       const card = criarCard(board); 
@@ -1474,19 +1527,22 @@ async function carregarTalvezGoste() {
   } catch (err) {
     console.error('Erro ao carregar "Talvez você goste":', err);
   }
+     finally {
+    hideLoader(); 
+  }
 }
 
 function centralizarCards() {
   document.querySelectorAll('.cards-container').forEach(container => {
     const cards = container.querySelectorAll('.card');
-    if (cards.length <= 5) { // menos de 5 cards
+    if (cards.length <= 5) { 
       container.classList.add('few-cards');
     } else {
       container.classList.remove('few-cards');
     }
   });
 }
-// Função para buscar pedalboards
+// buscar pedalboards
 async function buscarPedalboards() {
   const query = searchInput.value.trim();
   if (!query) return;
@@ -1498,7 +1554,7 @@ async function buscarPedalboards() {
     const res = await fetch(`${BASE_URL}/pedalboards/search?q=${encodeURIComponent(query)}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    const resultados = await res.json(); // já é o array de pedalboards do backend
+    const resultados = await res.json(); 
 
     container.innerHTML = "";
     if (resultados.length === 0) {
@@ -1514,16 +1570,17 @@ async function buscarPedalboards() {
     console.error(err);
     container.innerHTML = "<p>Erro ao buscar pedalboards</p>";
   }
+     finally {
+    hideLoader(); 
+  }
 }
-// ===== BUSCA AVANÇADA (substitua/cole após suas outras funções) =====
+
 let searchDebounceTimer = null;
 
-// Cria (se necessário) a seção de resultados de busca no DOM
 function ensureSearchSection() {
   let section = document.getElementById('sectionSearchResults');
   if (section) return section;
 
-  // cria a seção e insere antes da primeira category (ou depois do hero)
   section = document.createElement('section');
   section.className = 'category';
   section.id = 'sectionSearchResults';
@@ -1535,7 +1592,6 @@ section.innerHTML = `
   </div>
 `;
 
-  // tenta inserir logo após o hero-carousel (se existir)
   const hero = document.querySelector('.hero-carousel');
   if (hero && hero.parentNode) hero.parentNode.insertBefore(section, hero.nextSibling);
   else document.body.insertBefore(section, document.querySelector('.category'));
@@ -1552,43 +1608,29 @@ function hideAllMainSections() {
 function showAllMainSections() {
   document.querySelectorAll('section.category').forEach(sec => sec.style.display = 'block');
 }
-// ======== EFEITO "TELA DE BUSCA" ESTILO NETFLIX ========
 
-// Ativa modo busca: só adiciona a classe no body (não mexe no style.display do hero)
 function ativarModoBusca() {
   document.body.classList.add('modo-busca');
-  // opcional: garantir que a section de resultados exista e esteja visível
   const section = ensureSearchSection();
   section.style.display = 'block';
-  // rolar até topo pra evitar gap visual (opcional)
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-
-
-// Desativa modo busca: remove classe do body e esconde a seção de resultados
 function desativarModoBusca() {
   document.body.classList.remove('modo-busca');
 
   const section = document.getElementById('sectionSearchResults');
   if (section) {
-    // em vez de remover do DOM, só escondemos (para não perder event listeners se quiser)
     section.style.display = 'none';
-    // se preferir remover totalmente:
-    // section.remove();
   }
 
-  // garantia extra: remove qualquer estilo inline que possa ter ficado no hero/footer
   const hero = document.querySelector('.hero-carousel');
   const footer = document.querySelector('footer');
   if (hero) hero.style.removeProperty('display');
   if (footer) footer.style.removeProperty('display');
 
-  // corrigir posição da página (previne gap se o usuário estava rolado)
-  // você pode rolar até o topo ou até o topo do hero
   if (hero) {
     const heroTop = hero.getBoundingClientRect().top + window.scrollY;
-    // rola para alinhamento normal considerando header sticky
     const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
     const target = Math.max(0, heroTop - headerHeight);
     window.scrollTo({ top: target, behavior: 'smooth' });
@@ -1596,11 +1638,10 @@ function desativarModoBusca() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // atualiza setas etc.
   atualizarSetas();
 }
 
-// Função que popula a seção de busca com resultados (ou mensagem)
+// popula a seção de busca com resultados ou mensagem
 function showSearchResults(results) {
   const section = ensureSearchSection();
   const container = document.getElementById('searchResults');
@@ -1619,7 +1660,6 @@ if (!results || results.length === 0) {
     container.appendChild(card);
   });
 
-  // esconde as outras seções enquanto a busca está ativa
   hideAllMainSections();
   section.style.display = 'block';
 
@@ -1627,25 +1667,16 @@ if (!results || results.length === 0) {
   atualizarSetas();
 }
 
-// Função que limpa a busca e restaura a home
-// função que limpa a busca (chamada quando input fica vazio)
 function clearSearchResults() {
   const section = document.getElementById('sectionSearchResults');
-  if (section) section.style.display = 'none';
-  // restaura seções
+  if (section) section.style.display = 'none';s
   showAllMainSections();
-  // desativa o modo busca (usa a função que faz limpeza completa)
   desativarModoBusca();
-
-  // limpa container de resultados por segurança
   const container = document.getElementById('searchResults');
   if (container) container.innerHTML = '';
-
-  // força atualização visual das setas/cards
   atualizarSetas();
 }
 
-// Função principal que faz a requisição ao backend
 async function performSearch(query) {
   if (!token) {
     alert('Você precisa estar logado para buscar.');
@@ -1677,14 +1708,12 @@ async function performSearch(query) {
       return;
     }
 
-    const resultados = await res.json(); // seu backend já retorna array de pedalboards
-    // Se sua API tiver estrutura diferente (ex: { pedalboards: [...] }) adapte aqui.
+    const resultados = await res.json(); 
     if (Array.isArray(resultados)) {
       showSearchResults(resultados);
     } else if (resultados.pedalboards && Array.isArray(resultados.pedalboards)) {
       showSearchResults(resultados.pedalboards);
     } else {
-      // fallback
       showSearchResults([]);
     }
   } catch (err) {
@@ -1693,63 +1722,54 @@ async function performSearch(query) {
   }
 }
 
-// Debounce e eventos: pesquisa enquanto digita e ao pressionar Enter
 searchInput.addEventListener('input', (e) => {
   const q = e.target.value;
   clearTimeout(searchDebounceTimer);
   searchDebounceTimer = setTimeout(() => {
     performSearch(q);
-  }, 450); // 450ms debounce (ajuste se quiser)
+  }, 450); 
 });
 
-// Enter dispara busca imediata
 searchInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
     clearTimeout(searchDebounceTimer);
     performSearch(searchInput.value.trim());
   } else if (e.key === 'Escape') {
-    // Esc limpa a busca e restaura a home
     searchInput.value = '';
     clearSearchResults();
   }
 });
 
-// Também mantemos o clique no botão de lupa para abrir/fechar o campo
 searchBtn.addEventListener('click', () => {
   searchContainer.classList.toggle('active');
   if (searchContainer.classList.contains('active')) {
     searchInput.focus();
   } else {
-    // se fechar a lupa e o input estiver vazio, restaurar seções
     if (!searchInput.value.trim()) clearSearchResults();
   }
 });
 
-// Se o usuário apagar todo o texto manualmente (backspace até vazio), limpa resultados
 searchInput.addEventListener('blur', () => {
-  // não limpa automaticamente aqui para permitir clicar em resultado; só limpa se vazio
   if (!searchInput.value.trim()) {
     clearSearchResults();
   }
 });
 
-// ====== FUNÇÃO PARA CRIAR CARD ======
+// criação do card
 function criarCard(pedalboard) {
   const card = document.createElement("div");
   card.classList.add("card");
 
-  // Se for verificado, adiciona a classe que muda a cor
   if (pedalboard.verified) {
     card.classList.add("verified-card");
   }
 
-  // Imagem
   const img = document.createElement("img");
-  img.src = `${BASE_URL}${pedalboard.imagemCard || pedalboard.imagem || '/img/default-pedalboard.png'}`;
+  const imagemUrl = pedalboard.imagemCard || pedalboard.imagem || '/img/default-pedalboard.png';
+img.src = imagemUrl.startsWith('http') ? imagemUrl : `${BASE_URL}${imagemUrl}`;
   img.alt = pedalboard.nome;
 
-  // Info
   const info = document.createElement("div");
   info.classList.add("card-info");
   info.innerHTML = `
@@ -1760,16 +1780,14 @@ function criarCard(pedalboard) {
     <p>${pedalboard.usuario?.nome || pedalboard.artista || "Desconhecido"}</p>
   `;
 
-  // Monta o card
   card.appendChild(img);
   card.appendChild(info);
 
-  // Clique abre modal
   card.addEventListener("click", () => abrirModal(pedalboard));
 
   return card;
 }
-// ===== CARROSSEL AUTOMÁTICO DO BANNER =====
+// carousel
 const slides = document.querySelectorAll(".hero-slide");
 const prevBtn = document.querySelector(".carousel-btn.left");
 const nextBtn = document.querySelector(".carousel-btn.right");
@@ -1791,14 +1809,11 @@ function prevSlideFunc() {
   showSlide(currentSlide);
 }
 
-// Botões de navegação
 nextBtn.addEventListener("click", nextSlide);
 prevBtn.addEventListener("click", prevSlideFunc);
 
-// Troca automática a cada 6 segundos
 setInterval(nextSlide, 6000);
 
-// Adiciona classe 'scrolled' ao header ao rolar
 window.addEventListener('scroll', () => {
   const header = document.querySelector('.header');
   if (window.scrollY > 50) {
@@ -1807,21 +1822,20 @@ window.addEventListener('scroll', () => {
     header.classList.remove('scrolled');
   }
 });
-//lupa
+
 searchBtn.addEventListener('click', () => {
   searchContainer.classList.toggle('active');
   if(searchContainer.classList.contains('active')) {
     searchInput.focus();
   }
 });
-// Fecha o input ao clicar fora
+
 document.addEventListener('click', (e) => {
   if (!searchContainer.contains(e.target)) {
     searchContainer.classList.remove('active');
   }
 });
 
-// Evita que clique dentro do input feche
 searchInput.addEventListener('click', (e) => {
   e.stopPropagation();
 });
@@ -1832,21 +1846,18 @@ function atualizarSetas() {
     const btnLeft = wrapper.querySelector('.scroll-btn.left');
     const btnRight = wrapper.querySelector('.scroll-btn.right');
 
-    // Mostra/esconde a seta esquerda
     if (container.scrollLeft > 0) {
       btnLeft.style.display = 'flex';
     } else {
       btnLeft.style.display = 'none';
     }
 
-    // Mostra/esconde a seta direita
     if (container.scrollWidth - container.clientWidth - container.scrollLeft > 1) {
       btnRight.style.display = 'flex';
     } else {
       btnRight.style.display = 'none';
     }
 
-    // Atualiza também ao rolar com scroll manual
     container.addEventListener('scroll', () => {
       if (container.scrollLeft > 0) btnLeft.style.display = 'flex';
       else btnLeft.style.display = 'none';
@@ -1859,9 +1870,9 @@ function atualizarSetas() {
 btnVerificados.addEventListener('click', (e) => {
   e.preventDefault();
 
-  const headerOffset = document.querySelector('.header').offsetHeight; // altura do header
+  const headerOffset = document.querySelector('.header').offsetHeight; 
   const sectionPosition = sectionVerificados.getBoundingClientRect().top + window.scrollY;
-  const offsetPosition = sectionPosition - headerOffset - 20; // 20px extra de margem se quiser
+  const offsetPosition = sectionPosition - headerOffset - 20; 
 
   window.scrollTo({
     top: offsetPosition,
@@ -1870,12 +1881,10 @@ btnVerificados.addEventListener('click', (e) => {
 });
 
 
-// === ABRIR / FECHAR BUSCA ===
 searchBtn.addEventListener("click", (e) => {
   e.preventDefault();
   searchContainer.classList.toggle("active");
-  
-  // foca o campo quando abrir
+
   if (searchContainer.classList.contains("active")) {
     searchInput.focus();
   } else {
@@ -1883,6 +1892,34 @@ searchBtn.addEventListener("click", (e) => {
   }
 });
 
+const loadingModal = document.getElementById("loadingModal");
+loadingModal.style.display = "flex";
+
+window.addEventListener("load", async () => {
+  try {
+    await Promise.all([
+      carregarPedalboardsVerificados(token),
+      carregarMaisCurtidos(token),
+      carregarPedalboardsCurtidosPorUsuario(),
+      mostrarTodosEstilos()
+    ]);
+  } catch (err) {
+    console.error("Erro ao carregar dados:", err);
+  }
+
+  const imagens = Array.from(document.images);
+  await Promise.all(
+    imagens.map(img => {
+      if (img.complete) return Promise.resolve();
+      return new Promise(resolve => {
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+    })
+  );
+
+  loadingModal.style.display = "none";
+});
 
 </script>
 </body>

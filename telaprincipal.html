@@ -19,34 +19,33 @@
     overflow-x: hidden;
     }
 
-    /* Cabeçalho */
 header {
-  position: fixed;           /* mantém fixo */
+  position: fixed;         
   top: 0;
   left: 0;
   width: 100%;
-   background-color: transparent; /* antes estava rgba(0,0,0,0.3) */
-  backdrop-filter: none;  /* igual à home */
+   background-color: transparent; 
+  backdrop-filter: none;  
   -webkit-backdrop-filter: blur(10px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;          /* igual à home */
+  padding: 12px 20px;          
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* igual à home */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
 }
 
    
 .header-left {
   display: flex;
   align-items: center;
-  gap: 15px; /* distância entre logo e nav */
+  gap: 15px;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 12px; /* distância entre os links */
+  gap: 12px; 
 }
 
 .nav-links a {
@@ -62,8 +61,8 @@ header {
 }
 
 .nav-links a.active {
-  color: #e50914; /* vermelho estilo Netflix */
-  font-weight: 600; /* opcional, deixa mais destacado */
+  color: #e50914;
+  font-weight: 600; 
 }
 
 .nav-links .criar-btn {
@@ -87,7 +86,6 @@ header {
   gap: 12px;
 }
 
-/* Container da busca */
 .search-container {
   position: relative;
   display: flex;
@@ -109,13 +107,12 @@ header {
   right: 0;
 }
 
-/* Lupa minimalista */
 .search-icon {
   width: 32px;
   height: 32px;
   border: none;
   background: transparent;
-  color: #fff; /* cor do SVG */
+  color: #fff; 
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -127,7 +124,6 @@ header {
   transform: scale(1.1);
 }
 
-/* Input aparece quando ativo */
 .search-container.active input {
   width: 150px;
   opacity: 1;
@@ -146,8 +142,6 @@ header {
 .user-menu img:hover {
   transform: scale(1.1);
 }
-/* Avatar + Dropdown */
-
 .dropdown {
   display: none;
   position: absolute;
@@ -169,7 +163,6 @@ header {
   color: #e50914;
 }
 
-    /* Hero */
     .hero {
       height: 250px;
       background: url('/img/photo-1560849898-d058f7d93b23.jpg-1-1.jpg') center/cover no-repeat;
@@ -199,7 +192,6 @@ header {
       text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
     }
 
-    /* Conteúdo */
     main {
       max-width: 1200px;
       margin: 0 auto;
@@ -212,7 +204,6 @@ header {
       text-align: center;
     }
 
-    /* Grid */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -235,7 +226,6 @@ header {
   box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
-/* --- Parte da imagem --- */
 .card-image {
   width: 100%;
   height: 180px;
@@ -244,7 +234,6 @@ header {
   flex-shrink: 0;
 }
 
-/* --- Parte inferior com título --- */
 .card-info {
   background: #1e1e1e;
   padding: 1rem;
@@ -268,7 +257,6 @@ header {
   margin-left: 5px;
 }
 
-    /* Botão novo board */
     .novo-board {
       margin: 2rem auto 0;
       display: block;
@@ -286,7 +274,6 @@ header {
       transform: scale(1.05);
     }
 
-    /* Responsividade */
     @media (max-width: 768px) {
       .hero h2 {
         font-size: 1.4rem;
@@ -300,7 +287,7 @@ header {
         padding: 0.6rem 1.2rem;
       }
     }
-    /* --- Modal Overlay --- */
+ 
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -314,13 +301,12 @@ header {
   z-index: 9999;
 }
 
-/* Aumenta a largura do modal */
 .modal-content {
-  display: flex;          /* garante layout horizontal */
-  flex-direction: row;    /* horizontal */
-  width: 90%;             /* aumenta um pouco a largura geral */
+  display: flex;         
+  flex-direction: row;   
+  width: 90%;            
   max-width: 1200px;
-  height: 70%;            /* altura do modal */
+  height: 70%;           
   background: #1e1e1e;
   border-radius: 12px;
   overflow: hidden;
@@ -328,12 +314,12 @@ header {
 }
 
 .modal-left {
-  flex: 1 1 0;            /* ocupa a maior parte horizontal */
+  flex: 1 1 0;           
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
-  min-width: 0;           /* previne overflow do flex */
+  min-width: 0;           
 }
 
 .modal-left img {
@@ -371,15 +357,15 @@ header {
   font-size: 0.95rem;
   line-height: 1.5;
   max-height: 160px;
-  overflow-y: auto;       /* ativa scroll vertical */
-  overflow-x: hidden;     /* impede scroll horizontal */
-  word-wrap: break-word;  /* quebra linhas longas */
-  white-space: normal;    /* permite quebra de linha natural */
-  scrollbar-width: thin;  /* scrollbar mais fina (Firefox) */
+  overflow-y: auto;       
+  overflow-x: hidden;    
+  word-wrap: break-word;  
+  white-space: normal;    
+  scrollbar-width: thin;  
 }
 
 .modal-description::-webkit-scrollbar {
-  width: 6px;             /* scrollbar vertical fina */
+  width: 6px;            
 }
 
 .modal-description::-webkit-scrollbar-thumb {
@@ -392,14 +378,14 @@ header {
 }
 
 .modal-right {
-  flex: 0 0 300px;        /* largura fixa para as informações */
+  flex: 0 0 300px;        
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
-  overflow: auto;         /* caso o conteúdo exceda */
+  overflow: auto;         
 }
-/* Botões do modal */
+
 .modal-buttons {
   display: flex;
   flex-direction: column;
@@ -422,7 +408,6 @@ header {
   background: linear-gradient(135deg, #ff6666, #ff0000);
 }
 
-/* Botão fechar */
 .close-modal {
   position: absolute;
   top: 10px;
@@ -436,14 +421,13 @@ header {
     font-weight: bold;
     margin-left: 5px;
 }
-/* Container dos botões Editar e Excluir */
+
 .edit-delete-container {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-/* Proporções dos botões */
 .edit-delete-container button {
   border: none;
   border-radius: 6px;
@@ -451,16 +435,16 @@ header {
   font-weight: bold;
   color: #fff;
   transition: transform 0.2s, background 0.2s;
-  height: 40px; /* altura consistente com "Ver Pedalboard" */
+  height: 40px; 
 }
 
 #addToLibraryBtn {
-  flex: 0.7; /* 70% da largura total */
+  flex: 0.7; 
   background: linear-gradient(135deg, #ff3333, #cc0000);
 }
 
 #deleteBoardBtn {
-  flex: 0.3; /* 30% da largura total */
+  flex: 0.3; 
   background: linear-gradient(135deg, #990000, #660000);
   display: flex;
   align-items: center;
@@ -477,9 +461,10 @@ header {
   height: 40px;
 }
 .card.verified-card {
-  background: linear-gradient(135deg, #0057ff, #0033aa);
-  box-shadow: 0 5px 15px rgba(0, 85, 255, 0.4);
+  background: linear-gradient(135deg, #e40404, #be0f03);
+  box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
 }
+
 
 .card.verified-card .card-info {
   background: rgba(0, 0, 0, 0.3);
@@ -492,7 +477,7 @@ header {
 .card.verified-card .verified {
   color: #00ffea;
 }
-/* ==== Like (curtir) estilo Instagram ==== */
+
 .like-container {
   display: flex;
   align-items: center;
@@ -535,12 +520,12 @@ header {
   color: red;
 }
 .logo {
-  font-size: 2rem; /* aumenta o tamanho do texto */
-  font-weight: 700; /* deixa mais grosso */
-  color: #e50914; /* vermelho estilo Netflix */
-  letter-spacing: 2px; /* opcional, dá espaçamento entre letras */
+  font-size: 2rem;
+  font-weight: 700; 
+  color: #e50914; 
+  letter-spacing: 2px; 
 }
-/* se quiser que a sectionSearchResults fique mais abaixo só quando em modo busca: */
+
 .avatar-preview img {
   width: 150px;
   height: 150px;
@@ -581,13 +566,41 @@ body.avatar-modal-open {
   object-fit: cover;
   border: 2px solid #444;
 }
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  backdrop-filter: blur(3px);
+}
+.spinner {
+  border: 6px solid #444;
+  border-top: 6px solid #fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
 
   </style>
 </head>
 <body>
-
-  <!-- Cabeçalho -->
+<body>
+  <div id="loader" class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
  <header class="header">
   <div class="header-left">
     <div class="logo" hre>BOARDMAKER</div>
@@ -612,7 +625,7 @@ body.avatar-modal-open {
   </div>
 </div>
 
-<!-- Modal de avatar -->
+<!--avatar-->
 <div id="avatarModal" class="modal-avatar">
   <div class="modal-avatar-content" style="flex-direction: column; align-items: center; text-align: center; width: 350px; padding: 20px;">
     <h3 style="color: #fff;">Adicionar foto de perfil</h3>
@@ -628,22 +641,17 @@ body.avatar-modal-open {
 </div>
   </div>
 </header>
-
-  <!-- Hero -->
   <section class="hero">
     <h2 id="welcome">Aqui estão seus Pedalboards!</h2>
   </section>
-
-  <!-- Conteúdo -->
   <main>
 
     <div class="grid" id="pedalboardGrid">
-      <!-- Os pedalboards do usuário vão aparecer aqui -->
     </div>
 
     <button class="novo-board" id="createBoard">Criar novo Board</button>
   </main>
-  <!-- Modal de visualização do pedalboard -->
+  <!-- visualização do pedalboard -->
 <div id="viewPedalboardModal" class="modal-overlay">
   <div class="modal-content">
     <div class="modal-left">
@@ -676,20 +684,27 @@ body.avatar-modal-open {
 </div>
 
 <script>
-  // Pega token e nome do usuário do localStorage
   const token = localStorage.getItem("token");
   const userName = localStorage.getItem("userName");
   const welcome = document.getElementById("welcome");
   const pedalboardGrid = document.getElementById("pedalboardGrid");
       const usuariosVerificadores = ["68f2ac44a5bc316f26869a43"];
     const userId = localStorage.getItem("userId");
-const BASE_URL = "http://localhost:3000";
-  // Mostra o nome do usuário
+const BASE_URL = "https://boardmakerback.onrender.com";
+
+  function showLoader() {
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "flex";
+}
+
+function hideLoader() {
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "none";
+}
   if (userName) {
     welcome.textContent = `Bem-vindo, ${userName}`;
   }
 
-  // Seleção do modal e elementos internos
   const modal = document.getElementById("viewPedalboardModal");
   const modalImage = document.getElementById("modalPedalboardImage");
   const modalName = document.getElementById("modalPedalboardName");
@@ -705,15 +720,9 @@ const avatarPreview = document.getElementById("avatarPreview");
 const saveAvatarBtn = document.getElementById("saveAvatarBtn");
 const cancelAvatarBtn = document.getElementById("cancelAvatarBtn");
 const userDropdown = document.getElementById("userDropdown");
+const DEFAULT_AVATAR = "img/perfil.png"; 
 
-// Função que realiza a pesquisa (igual à tela home)
-
-// Amarra o click da lupa à pesquisa
-
-
-const DEFAULT_AVATAR = "img/perfil.png"; // ou placeholder
-
-// Carrega avatar atual do usuário
+//avatar do usuario
 async function carregarAvatar() {
   try {
     const res = await fetch(`${BASE_URL}/usuarios/me`, {
@@ -721,9 +730,12 @@ async function carregarAvatar() {
     });
     if (res.ok) {
       const user = await res.json();
-      const avatarUrl = user.avatar ? `${BASE_URL}${user.avatar}` : DEFAULT_AVATAR;
-      userAvatar.src = avatarUrl;
-      avatarPreview.src = avatarUrl;
+     const avatarUrl = user.avatar
+  ? (user.avatar.startsWith("http") ? user.avatar : `${BASE_URL}${user.avatar}`)
+  : DEFAULT_AVATAR;
+
+userAvatar.src = avatarUrl;
+avatarPreview.src = avatarUrl;
     } else {
       userAvatar.src = DEFAULT_AVATAR;
       avatarPreview.src = DEFAULT_AVATAR;
@@ -735,15 +747,14 @@ async function carregarAvatar() {
 }
 carregarAvatar();
 
-// Abrir modal ao clicar em "Foto de perfil"
+// modal ao clicar na foto de perfil
 uploadAvatarBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   avatarModal.style.display = "flex";
-  document.body.classList.add("avatar-modal-open"); // trava scroll
+  document.body.classList.add("avatar-modal-open"); 
   userDropdown.style.display = "none";
 });
 
-// Fechar modal ao clicar em cancelar ou fora
 cancelAvatarBtn.addEventListener("click", () => {
   avatarModal.style.display = "none";
   document.body.classList.remove("avatar-modal-open");
@@ -757,13 +768,12 @@ avatarModal.addEventListener("click", (e) => {
   }
 });
 
-// Pré-visualizar a imagem escolhida
 avatarInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) avatarPreview.src = URL.createObjectURL(file);
 });
 
-// Salvar avatar
+// salvar foto
 saveAvatarBtn.addEventListener("click", async () => {
   const file = avatarInput.files[0];
   if (!file) return alert("Escolha uma imagem!");
@@ -795,36 +805,36 @@ saveAvatarBtn.addEventListener("click", async () => {
   }
 });
 
-// Fecha dropdown do usuário ao clicar fora
 document.addEventListener("click", (e) => {
   if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
     userDropdown.style.display = "none";
   }
 });
 
-// Toggle dropdown ao clicar no avatar
 userAvatar.addEventListener("click", (e) => {
   e.stopPropagation();
   userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
 });
-
+function getImageUrl(imagem) {
+  if (!imagem) return "img/default-pedalboard.png";
+  if (imagem.startsWith("http")) return imagem;
+  return `${BASE_URL}${imagem}`;
+}
 function abrirModal(board) {
   modal.style.display = "flex";
-  modalImage.src = board.imagem ? `${BASE_URL}${board.imagem}` : "/img/default-pedalboard.png";
+  modalImage.src = getImageUrl(board.imagem);
   modalName.textContent = board.nome;
   modalArtist.textContent = board.usuario?.nome ? `De: ${board.usuario.nome}` : "Usuário: Desconhecido";
   modalCreator.textContent = board.artista ? `Artista: ${board.artista}` : "Artista: Não informado";
   modalDescription.textContent = board.descricao || "Sem descrição";
 
-  // Botão "Ver melhor"
+  // ver melhor
   const viewBetterBtn = modal.querySelector(".viewBetterBtn");
   viewBetterBtn.dataset.id = board._id;
 
-  // Limpa o container antes de reconstruir
   const container = document.querySelector(".edit-delete-container");
   container.innerHTML = "";
 
-  // 🔹 Se o pedalboard for do usuário logado
   if (board.usuario?._id === userId) {
     const editBtn = document.createElement("button");
     editBtn.id = "addToLibraryBtn";
@@ -867,9 +877,8 @@ function abrirModal(board) {
     container.appendChild(editBtn);
     container.appendChild(deleteBtn);
   } 
-  // 🔹 Se o pedalboard for de outro usuário
+
   else {
-    // Botão "Add"
     const addBtn = document.createElement("button");
     addBtn.id = "addToLibraryBtn";
     addBtn.textContent = "Add";
@@ -887,7 +896,6 @@ function abrirModal(board) {
       }
     };
 
-// ----- Like (curtir) dentro do modal -----
 const likeContainer = document.createElement("div");
 likeContainer.className = "like-container";
 
@@ -898,7 +906,6 @@ const likeCount = document.createElement("span");
 likeCount.className = "like-count";
 likeCount.textContent = Array.isArray(board.likes) ? board.likes.length : 0;
 
-// Verifica se o usuário já curtiu
 if (Array.isArray(board.likes) && board.likes.includes(userId)) {
   heartIcon.classList.replace("fa-regular", "fa-solid");
   likeContainer.classList.add("liked");
@@ -907,7 +914,6 @@ if (Array.isArray(board.likes) && board.likes.includes(userId)) {
 likeContainer.appendChild(heartIcon);
 likeContainer.appendChild(likeCount);
 
-// Evento curtir/descurtir
 likeContainer.addEventListener("click", async (e) => {
   e.stopPropagation();
   const liked = likeContainer.classList.toggle("liked");
@@ -922,7 +928,6 @@ likeContainer.addEventListener("click", async (e) => {
     const data = await res.json();
     likeCount.textContent = data.totalLikes;
 
-    // 🔹 Atualiza o board localmente para que futuras renderizações fiquem corretas
     if (liked) {
       if (!Array.isArray(board.likes)) board.likes = [];
       board.likes.push(userId);
@@ -935,44 +940,36 @@ likeContainer.addEventListener("click", async (e) => {
   }
 });
 
-    // Adiciona Add + Like dentro do container
     container.appendChild(addBtn);
-    // Adiciona dentro do container do modal
 container.appendChild(likeContainer);
   }
 }
 
-  // Fecha modal
   closeModal.addEventListener("click", () => {
     modal.style.display = "none";
   });
 
-  // Fecha modal clicando fora do conteúdo
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.style.display = "none";
   });
 function criarCard(board) {
     const card = document.createElement("div");
     card.className = "card";
-
-    // Se o pedalboard for verificado, adiciona a classe azul
     if (board.verified) {
         card.classList.add("verified-card");
     }
 
-    // ----- Parte da imagem -----
     const cardImage = document.createElement("div");
     cardImage.className = "card-image";
 
-    if (board.imagemCard) {
-        cardImage.style.backgroundImage = `url('${BASE_URL}${board.imagemCard}')`;
-    } else if (board.imagem) {
-        cardImage.style.backgroundImage = `url('${BASE_URL}${board.imagem}')`;
-    } else {
-        cardImage.style.background = "#333"; // fallback
-    }
+ if (board.imagemCard) {
+    cardImage.style.backgroundImage = `url('${getImageUrl(board.imagemCard)}')`;
+} else if (board.imagem) {
+    cardImage.style.backgroundImage = `url('${getImageUrl(board.imagem)}')`;
+} else {
+    cardImage.style.backgroundImage = "url('img/default-pedalboard.png')";
+}
 
-    // ----- Parte inferior com nome -----
     const cardInfo = document.createElement("div");
     cardInfo.className = "card-info";
 
@@ -994,12 +991,9 @@ function criarCard(board) {
 
     cardInfo.appendChild(title);
 
-
-    // ----- Junta tudo -----
     card.appendChild(cardImage);
     card.appendChild(cardInfo);
 
-    // ----- Botão "Verificar" (mantido) -----
 
     if (!board.verified && usuariosVerificadores.includes(userId)) {
         const verifyBtn = document.createElement("button");
@@ -1038,46 +1032,48 @@ function criarCard(board) {
         cardInfo.appendChild(verifyBtn);
     }
 
-    // ----- Evento de clique -----
     card.addEventListener("click", (e) => {
         if (e.target.tagName.toLowerCase() === "button") return;
         abrirModal(board);
     });
 
-    // Adiciona ao grid
     pedalboardGrid.appendChild(card);
 }
 
 
-  // Carrega pedalboards do usuário logado
-  async function carregarMeusBoards() {
-    try {
-      const res = await fetch("http://localhost:3000/meus-pedalboards", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      
-      pedalboardGrid.innerHTML = "";
-      if (data.pedalboards && data.pedalboards.length > 0) {
-        data.pedalboards.forEach(criarCard);
-      } else {
-        pedalboardGrid.innerHTML = "<p style='text-align:center;color:#aaa'>Você ainda não tem nenhum pedalboard.</p>";
-      }
-    } catch (err) {
-      console.error("Erro ao carregar pedalboards:", err);
-      pedalboardGrid.innerHTML = "<p style='text-align:center;color:#ff3333'>Erro ao carregar seus pedalboards.</p>";
-    }
-  }
+  // carrega os pedalboards do usuario
+async function carregarMeusBoards() {
+  showLoader(); 
 
+  try {
+    const res = await fetch("https://boardmakerback.onrender.com/meus-pedalboards", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+
+    pedalboardGrid.innerHTML = "";
+    if (data.pedalboards && data.pedalboards.length > 0) {
+      data.pedalboards.forEach(criarCard);
+    } else {
+      pedalboardGrid.innerHTML = "<p style='text-align:center;color:#aaa'>Você ainda não tem nenhum pedalboard.</p>";
+    }
+  } catch (err) {
+    console.error("Erro ao carregar pedalboards:", err);
+    pedalboardGrid.innerHTML = "<p style='text-align:center;color:#ff3333'>Erro ao carregar seus pedalboards.</p>";
+  } finally {
+    hideLoader(); 
+  }
+}
+
+showLoader();
+carregarMeusBoards();
   carregarMeusBoards();
 
-  // Pesquisa pedalboards de todos os usuários
   document.getElementById("searchInput").addEventListener("input", async (e) => {
     const query = e.target.value;
-    if (query.length < 2) return; // só pesquisa se tiver 2+ caracteres
-
+    if (query.length < 2) return; 
     try {
-      const res = await fetch(`http://localhost:3000/pedalboards/search?q=${query}`, {
+      const res = await fetch(`https://boardmakerback.onrender.com/pedalboards/search?q=${query}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -1094,12 +1090,6 @@ function criarCard(board) {
     }
   });
 
-  // Menu do usuário
- 
-  
- 
-
-  // Logout
   document.getElementById("logoutBtn").addEventListener("click", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
@@ -1116,7 +1106,6 @@ document.querySelectorAll(".viewBetterBtn").forEach(btn => {
   });
 });
 
-  // Criar novo pedalboard → leva para tela de criação com parâmetro
   document.getElementById("createBoard").addEventListener("click", () => {
     window.location.href = "teladepedais.html?novoBoard=true";
   });

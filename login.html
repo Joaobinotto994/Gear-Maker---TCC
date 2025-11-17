@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Pedalboard</title>
   <style>
-    /* --- seu CSS aqui (mantive o original) --- */
     body { 
       margin: 0; 
       font-family: Arial, Helvetica, sans-serif; 
@@ -103,17 +102,13 @@
   <div class="login-box">
     <h1>Entrar</h1>
 
-    <!-- note: id no form para pegar com JS -->
     <form id="loginForm" action="#" method="POST">
       <div class="input-box">
-        <!-- ids para facilitar o JS -->
         <input id="emailInput" type="email" name="email" placeholder="Email ou número de celular" required />
       </div>
       <div class="input-box">
         <input id="senhaInput" type="password" name="senha" placeholder="Senha" required />
       </div>
-
-      <!-- lugar para mostrar mensagens de erro/sucesso -->
       <div id="mensagem" style="color: #ffb3b3; font-size:14px; min-height:18px; margin-bottom:8px"></div>
 
       <button type="submit" class="login-btn">Entrar</button>
@@ -126,22 +121,18 @@
     </div>
   </div>
 
-  <!-- SCRIPT: liga com backend -->
   <script>
-    // URL base do seu backend
-    const API_BASE = 'http://localhost:3000';
+    const API_BASE = 'https://boardmakerback.onrender.com';
 
     const form = document.getElementById('loginForm');
     const msg = document.getElementById('mensagem');
 
     form.addEventListener('submit', async (e) => {
-      e.preventDefault(); // não deixa a página recarregar
+      e.preventDefault(); 
 
-      // pegar valores
       const email = document.getElementById('emailInput').value.trim();
       const senha = document.getElementById('senhaInput').value;
 
-      // validação mínima
       if (!email || !senha) {
         msg.style.color = '#ffb3b3';
         msg.textContent = 'Preencha email e senha.';
@@ -163,13 +154,11 @@
         const data = await res.json();
 
         if (!res.ok) {
-          // backend devolve { error: "..."}
           msg.style.color = '#ffb3b3';
           msg.textContent = data.error || 'Erro ao logar';
           return;
         }
 
-        // se ok, data.token deve existir
         if (!data.token) {
           msg.style.color = '#ffb3b3';
           msg.textContent = 'Resposta do servidor sem token.';
@@ -177,7 +166,6 @@
           return;
         }
 
-        // salvar token (lembrando: localStorage é simples, ok pra testes)
         localStorage.setItem('token', data.token);
 
         localStorage.setItem('userId', data.user._id)
@@ -185,9 +173,8 @@
         msg.style.color = '#b3ffb3';
         msg.textContent = 'Login efetuado! Redirecionando...';
 
-        // redireciona para a página principal / dashboard (troque o nome se quiser)
         setTimeout(() => {
-          window.location.href = 'home.html'; // ou dashboard.html
+          window.location.href = 'home.html'; 
         }, 700);
 
       } catch (err) {

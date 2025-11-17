@@ -121,13 +121,13 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:3000'; // URL do backend
+    const API_BASE = 'https://boardmakerback.onrender.com'; 
 
     const form = document.getElementById('cadastroForm');
     const msg = document.getElementById('mensagem');
 
     form.addEventListener('submit', async (e) => {
-      e.preventDefault(); // não recarrega a página
+      e.preventDefault(); 
 
       const nome = document.getElementById('nomeInput').value.trim();
       const email = document.getElementById('emailInput').value.trim();

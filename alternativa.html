@@ -15,7 +15,6 @@
       overflow: hidden;
     }
 
-    /* Sidebar de pedais */
     .sidebar {
       width: 250px;
       background: #1a1a1a;
@@ -47,7 +46,6 @@
       background: #333;
     }
 
-    /* Área do pedalboard */
     .workspace {
       flex: 1;
       background: #111;
@@ -116,7 +114,7 @@
 </head>
 <body>
 
-  <!-- Sidebar de pedais -->
+
   <div class="sidebar">
     <h2>Pedais Disponíveis</h2>
     <div class="pedal-item" draggable="true" data-nome="Distortion">Distortion</div>
@@ -126,14 +124,12 @@
     <div class="pedal-item" draggable="true" data-nome="Reverb">Reverb</div>
   </div>
 
-  <!-- Área de trabalho -->
   <div class="workspace">
     <div class="workspace-header">
       <input type="text" id="boardName" placeholder="Nome do Pedalboard">
       <button id="saveBoard">Salvar Pedalboard</button>
     </div>
     <div class="board-grid" id="boardGrid">
-      <!-- Pedais arrastados vão aparecer aqui -->
     </div>
   </div>
 
@@ -144,7 +140,6 @@
 
     let draggedPedal = null;
 
-    // Drag & Drop
     pedalItems.forEach(pedal => {
       pedal.addEventListener("dragstart", (e) => {
         draggedPedal = e.target;
@@ -163,7 +158,7 @@
       }
     });
 
-    // Salvar pedalboard
+
     document.getElementById("saveBoard").addEventListener("click", async () => {
       const nome = document.getElementById("boardName").value;
       if (!nome) {
@@ -174,7 +169,7 @@
       const pedais = Array.from(boardGrid.children).map(p => p.textContent);
 
       try {
-        const res = await fetch("http://localhost:3000/pedalboards", {
+        const res = await fetch("https://boardmakerback.onrender.com/pedalboards", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
