@@ -5,8 +5,8 @@ const PedalboardSchema = new mongoose.Schema({
   descricao: { type: String },
   categorias: { type: [String], default: [] },
 estilo: {
-  type: [String], // agora é array de strings
-  enum: [ // lista fixa de estilos
+  type: [String], 
+  enum: [ 
     "Alternativo",
     "Bandinha",
     "Black Metal",
@@ -35,7 +35,7 @@ estilo: {
     "Thrash Metal",
     "Outro"
   ],
-  default: ["Outro"] // default agora é array
+  default: ["Outro"] 
 },
   pedais: [
     {
@@ -47,7 +47,7 @@ estilo: {
       src: { type: String },
       widthCm: { type: Number, default: 8 },
       heightCm: { type: Number, default: 8 },
-        spec: { type: String, default: '' } // 👈 NOVO CAMPO
+        spec: { type: String, default: '' } 
     }
   ],
 
@@ -67,11 +67,9 @@ estilo: {
   usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   verified: { type: Boolean, default: false },
   artista: { type: String },
-
-  // ← NOVO CAMPO
-  imagem: { type: String }, // URL ou base64 da imagem final do board
-   imagemCard: { type: String }, // nova imagem opcional para o card
-   fundo: { type: String }, // URL ou base64 da imagem de fundo
+  imagem: { type: String }, 
+   imagemCard: { type: String }, 
+   fundo: { type: String }, 
    annotations: { type: Array, default: [] }, 
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Usuario" }]  
 });

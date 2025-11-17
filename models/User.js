@@ -1,17 +1,15 @@
-//trazendo o mongoose para o codigo
 const mongoose = require('mongoose');
 
-//criando o schema
 const userSchema = new mongoose.Schema({
   nome: {
     type: String,
-    required: true, //campo obrigatorio
-    trim: true //remove espaços do começo e do fim
+    required: true, 
+    trim: true 
   },
   email: {
     type: String,
     required: true,
-    unique: true, //apenas um email nao pode ter outro igual
+    unique: true, 
     match: [/^\S+@\S+\.\S+$/, "Formato de email inválido"]
   },
   senha: {
@@ -22,7 +20,7 @@ const userSchema = new mongoose.Schema({
   telefone: {
     type: String,
     required: true,
-    match: [/^\d{10,11}$/, "Telefone deve ter 10 ou 11 dígitos"] // ex: 55999999999
+    match: [/^\d{10,11}$/, "Telefone deve ter 10 ou 11 dígitos"] 
   },
   dataNascimento: {
     type: Date,
@@ -35,5 +33,5 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-//Export 
+
 module.exports = mongoose.model('User', userSchema);

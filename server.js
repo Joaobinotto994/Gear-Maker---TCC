@@ -1,62 +1,105 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); 
 const cors = require('cors');
-const path = require('path'); // ← adicionado
-const multer = require('multer'); // ← ADICIONE ISSO AQUI
+const path = require('path');
+const multer = require('multer'); 
 
-// Configuração do armazenamento
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // pasta onde os arquivos serão salvos
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = file.originalname.split('.').pop();
-    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + ext);
-  }
+
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// config do cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// config do multer + cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'pedalboards', // pasta que esta na minha conta do cloudinary
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+  },
+});
+
+
 
 const upload = multer({ storage });
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Models
+// schemas
 const User = require('./models/User');
 const Pedal = require('./models/Pedal'); 
 const Pedalboard = require('./models/Pedalboard');
 const Board = require('./models/Board');
-// Lista de IDs ou emails permitidos a verificar
+// lista dos usuarios  verificados por ID (conta BoardMakerOficial)
 const usuariosVerificadores = [
   "68f2ac44a5bc316f26869a43"
 ];
 
 app.use(cors());
-app.use(express.json());
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.json({ limit: '10mb' }));
 
 
-// Middleware de autenticação JWT
+
+const placeholder = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/v1234567890/placeholder.png`;
+
 function autenticarToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  if (!token) return res.status(401).json({ error: "Acesso negado. Token não fornecido." });
+  if (!token) 
+    return res.status(401).json({ error: "Acesso negado. Token não fornecido." });
 
   try {
-    const usuario = jwt.verify(token, "segredo_do_token_aqui");
+    const usuario = jwt.verify(token, process.env.JWT_SECRET);
     req.usuario = usuario;
     next();
   } catch (err) {
-    return res.status(403).json({ error: "Token inválido ou expirado" });
+    if (err.name === "TokenExpiredError") {
+      return res.status(403).json({ error: "Seu acesso expirou, faça login novamente!!" });
+    }
+    return res.status(403).json({ error: "Token inválido. Faça login novamente!" });
   }
 }
 
-// ------------------------ Usuários ------------------------
+app.post("/upload-fundo", autenticarToken, async (req, res) => {
+  try {
+    const { image } = req.body;
+    if (!image) return res.status(400).json({ error: "Nenhuma imagem enviada" });
 
-// Registro
+    const uploadResult = await cloudinary.uploader.upload(image, {
+      folder: "pedalboards/fundos",
+      resource_type: "image"
+    });
+
+    res.json({ url: uploadResult.secure_url });
+  } catch (err) {
+    console.error("Erro ao enviar fundo:", err);
+
+    // tamanho maximo da imagem
+    if (err.message.includes("request entity too large")) {
+      return res.status(413).json({
+        error: "Imagem é grande demais!! Não é permitido imagens de mais de 9MB"
+      });
+    }
+
+    res.status(500).json({
+      error: "Erro ao enviar fundo",
+      detalhes: err.message
+    });
+  }
+});
+
+// ------------------------ USUARIOS ------------------------
+
+// registrar
 app.post('/register', async (req, res) => {
   try {
     const { nome, email, senha, telefone, dataNascimento } = req.body;
@@ -64,7 +107,7 @@ app.post('/register', async (req, res) => {
 
    const novoUsuario = new User({ 
   nome, email, senha: hashSenha, telefone, dataNascimento,
-  avatar: req.body.avatar || undefined // usa default se não enviado
+  avatar: req.body.avatar || undefined 
 });
     await novoUsuario.save();
 
@@ -74,10 +117,10 @@ app.post('/register', async (req, res) => {
     res.status(400).json({ error: "Erro ao criar usuário", detalhes: err.message });
   }
 });
-// Listar todos os usuários (apenas para testes)
+// listar só para testes no postman
 app.get('/usuarios', async (req, res) => {
   try {
-   const usuarios = await User.find({}, '_id nome email avatar'); // só pega _id, nome e email
+   const usuarios = await User.find({}, '_id nome email avatar'); 
     res.json(usuarios);
   } catch (err) {
     console.error(err);
@@ -85,7 +128,7 @@ app.get('/usuarios', async (req, res) => {
   }
 });
 
-// Login
+// login
 app.post('/login', async (req, res) => {
   try {
     const { email, senha } = req.body;
@@ -95,13 +138,13 @@ app.post('/login', async (req, res) => {
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) return res.status(400).json({ error: "Senha incorreta" });
 
-    const token = jwt.sign(
-      { id: usuario._id, email: usuario.email, nome: usuario.nome },
-      "segredo_do_token_aqui",
-      { expiresIn: "1h" }
-    );
+const token = jwt.sign(
+  { id: usuario._id, email: usuario.email, nome: usuario.nome },
+  process.env.JWT_SECRET,
+  { expiresIn: "6h" } 
+);
 
-    // ✅ Retorna token + dados do usuário
+    //dados do token
     res.json({
       message: "Login efetuado com sucesso!",
       token,
@@ -118,7 +161,7 @@ app.put('/usuarios/me/avatar', async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ error: "Token não fornecido" });
 
-    const decoded = jwt.verify(token, "segredo_do_token_aqui");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const usuario = await User.findById(decoded.id);
     if (!usuario) return res.status(404).json({ error: "Usuário não encontrado" });
 
@@ -136,7 +179,7 @@ app.put('/usuarios/me/avatar', async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ error: "Token não fornecido" });
 
-    const decoded = jwt.verify(token, "segredo_do_token_aqui");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const usuario = await User.findById(decoded.id);
     if (!usuario) return res.status(404).json({ error: "Usuário não encontrado" });
 
@@ -149,17 +192,17 @@ app.put('/usuarios/me/avatar', async (req, res) => {
     res.status(500).json({ error: "Erro ao atualizar avatar", detalhes: err.message });
   }
 });
-// Rota para pegar dados do usuário logado
+// dados do usuario logado
 app.get('/usuarios/me', async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ error: "Token não fornecido" });
 
-    const decoded = jwt.verify(token, "segredo_do_token_aqui");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const usuario = await User.findById(decoded.id);
     if (!usuario) return res.status(404).json({ error: "Usuário não encontrado" });
 
-    // Retorna os dados do usuário incluindo avatar
+    // retorna os dados do usuário 
     res.json({
       _id: usuario._id,
       nome: usuario.nome,
@@ -171,14 +214,13 @@ app.get('/usuarios/me', async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar usuário", detalhes: err.message });
   }
 });
-// ------------------------ Boards ------------------------
+// ------------------------ BOARDS ------------------------
 
-// Criar novo board
-// Criar Board
+// criar board
 app.post('/boards', autenticarToken, upload.single('imagem'), async (req, res) => {
   try {
     const { nome, widthCm, heightCm } = req.body;
-    const imagem = req.file ? `/uploads/${req.file.filename}` : null;
+    const imagem = req.file ? req.file.path : null;
 
     if (!nome || !imagem) 
       return res.status(400).json({ erro: "Nome e imagem são obrigatórios." });
@@ -198,15 +240,14 @@ app.post('/boards', autenticarToken, upload.single('imagem'), async (req, res) =
     res.status(500).json({ erro: "Erro ao criar board" });
   }
 });
-// Listar todos os boards (de todos os usuários) com filtro de busca
+// lista todos os boards de todos usuarios
 app.get('/boards/todos', autenticarToken, async (req, res) => {
   try {
     const search = req.query.search || "";
 
-    // 🔍 Busca em todos os boards (sem filtrar por usuário)
     const boards = await Board.find({
-      nome: { $regex: search, $options: "i" } // busca parcial e case-insensitive
-    }).populate("usuarioId", "nome email"); // opcional: exibe nome/email do criador
+      nome: { $regex: search, $options: "i" } 
+    }).populate("usuarioId", "nome email"); 
 
     res.json(boards);
   } catch (error) {
@@ -215,25 +256,20 @@ app.get('/boards/todos', autenticarToken, async (req, res) => {
   }
 });
 
-// DELETE /boards/:id → excluir um board
+// deletar board
 app.delete('/boards/:id', autenticarToken, async (req, res) => {
   const { id } = req.params;
   const userId = req.usuario.id;
 
   try {
-    // Busca o board pelo ID e usuário
     const board = await Board.findById(id);
 
     if (!board) {
       return res.status(404).json({ error: "Board não encontrado" });
     }
-
-    // Garante que o board pertence ao usuário logado
     if (board.usuarioId.toString() !== userId) {
       return res.status(403).json({ error: "Não autorizado a deletar este board" });
     }
-
-    // Remove o board
     await Board.findByIdAndDelete(id);
 
     res.json({ message: "Board excluído com sucesso" });
@@ -243,30 +279,26 @@ app.delete('/boards/:id', autenticarToken, async (req, res) => {
   }
 });
 
-// Listar boards do usuário logado (com filtro de busca)
+// listar boards do usuário logado com filtro de busca
 app.get('/boards', autenticarToken, async (req, res) => {
   try {
     const search = req.query.search || "";
-
-    // 🔍 Busca boards do usuário logado que combinem com o nome digitado
+    // busca os boards do usuário logado que combinem com o nome digitado
     const boards = await Board.find({
       usuarioId: req.usuario.id,
-      nome: { $regex: search, $options: "i" } // busca parcial e case-insensitive
+      nome: { $regex: search, $options: "i" } 
     });
-
     res.json(boards);
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: "Erro ao buscar boards" });
   }
 });
-// Copiar um board existente para a biblioteca do usuário logado
+// copiar/adiciona um board existente para a biblioteca
 app.post("/boards/copiar/:id", autenticarToken, async (req, res) => {
   try {
     const boardOriginal = await Board.findById(req.params.id);
     if (!boardOriginal) return res.status(404).json({ error: "Board não encontrado" });
-
-    // Cria uma cópia associada ao usuário logado
     const novoBoard = new Board({
       nome: boardOriginal.nome,
       imagem: boardOriginal.imagem,
@@ -297,16 +329,15 @@ app.patch('/boards/:id/verificar', autenticarToken, async (req, res) => {
     res.status(500).json({ error: "Erro ao verificar board", detalhes: err.message });
   }
 });
-// GET /boards/:id - retorna um board específico do usuário logado
+//retorna um board especifico do usuário 
 app.get('/boards/:id', autenticarToken, async (req, res) => {
   try {
-    const board = await Board.findOne({ _id: req.params.id, usuarioId: req.usuario.id });
+    const board = await Board.findById(req.params.id);
 
     if (!board) {
       return res.status(404).json({ error: "Board não encontrado" });
     }
 
-    // Retorna apenas os campos necessários para o card
     res.json({
       _id: board._id,
       nome: board.nome,
@@ -321,29 +352,24 @@ app.get('/boards/:id', autenticarToken, async (req, res) => {
   }
 });
 
-// ------------------------ Pedalboards ------------------------
+// ------------------------ PEDALBOARDS ------------------------
 
-// Criar pedalboard com imagemCard
+// cria o pedalboard 
 const uploadFields = upload.fields([
   { name: 'imagem', maxCount: 1 },
-  { name: 'imagemCard', maxCount: 1 } // adiciona o card
+  { name: 'imagemCard', maxCount: 1 } 
 ]);
 
 app.post('/pedalboards', autenticarToken, uploadFields, async (req, res) => {
   try {
-      const { nome, descricao, categoria, pedais, boards, artista, annotations, estilo } = req.body; // <-- adiciona estilo
-
-
-    // Pega os arquivos enviados
-    let imagem = req.files?.imagem ? `/uploads/${req.files.imagem[0].filename}` : req.body.imagem || null;
-    let imagemCard = req.files?.imagemCard ? `/uploads/${req.files.imagemCard[0].filename}` : req.body.imagemCard || null;
-    let fundo = req.files?.fundo ? `/uploads/${req.files.fundo[0].filename}` : req.body.fundo || null; // <-- ADICIONE AQUI
+      const { nome, descricao, categoria, pedais, boards, artista, annotations, estilo } = req.body; 
+    let imagem = req.files?.imagem ? req.files.imagem[0].path : req.body.imagem || null;
+    let imagemCard = req.files?.imagemCard ? req.files.imagemCard[0].path : req.body.imagemCard || null;
+   let fundo = req.files?.fundo ? req.files.fundo[0].path : req.body.fundo || null;
 
     if (!nome || !imagem) {
       return res.status(400).json({ erro: "Nome e imagem principal são obrigatórios." });
     }
-
-    // Parse JSON apenas se for string
     const pedaisParsed = pedais ? (typeof pedais === 'string' ? JSON.parse(pedais) : pedais) : [];
     const boardsParsed = boards ? (typeof boards === 'string' ? JSON.parse(boards) : boards) : [];
     const estilosSelecionados = typeof estilo === 'string' ? JSON.parse(estilo) : estilo;
@@ -352,27 +378,27 @@ const novoPedalboard = new Pedalboard({
     nome,
     descricao,
     categorias: categoria ? [categoria] : [],
-    estilo: estilosSelecionados, // agora salva como array
+    estilo: estilosSelecionados, 
     pedais: pedaisParsed.map(p => ({
         pedalId: p.pedalId,
         x: p.x || 0,
         y: p.y || 0,
         rotation: p.rotation || 0,
         zIndex: p.zIndex || 10,
-        src: p.src || '/uploads/imagem-placeholder.png',
+        src: p.src || p.src || placeholder,
         widthCm: p.widthCm || 8,
         heightCm: p.heightCm || 8
     })),
-    boards: boardsParsed.map(b => ({
-        boardId: b.boardId,
-        x: b.x || 0,
-        y: b.y || 0,
-        rotation: b.rotation || 0,
-        zIndex: b.zIndex || 10,
-        src: b.src || '/uploads/imagem-placeholder.png',
-        widthCm: b.widthCm || 30,
-        heightCm: b.heightCm || 30
-    })),
+boards: boardsParsed.map(b => ({
+  boardId: b.boardId,
+  x: b.x || 0,
+  y: b.y || 0,
+  rotation: b.rotation || 0,
+  zIndex: b.zIndex || 10,
+  src: b.src || placeholder, 
+  widthCm: b.widthCm || 30,
+  heightCm: b.heightCm || 30
+})),
     usuario: req.usuario.id,
     artista: artista || req.usuario.nome,
     imagem,
@@ -395,20 +421,18 @@ const novoPedalboard = new Pedalboard({
     });
   }
 });
-// Listar pedalboards do usuário logado
+// lista pedalboards do usuário 
 app.get('/meus-pedalboards', autenticarToken, async (req, res) => {
   try {
-    const pedalboards = await Pedalboard.find({ usuario: req.usuario.id })
-      .populate('pedais')
-      .populate('usuario', 'nome email')
-      .select("+curtidas"); // 👈 inclui curtidas se o campo for oculto por padrão
-
-    // 🔹 Garante que o campo "estilo" seja sempre retornado
+ const pedalboards = await Pedalboard.find({ usuario: req.usuario.id })
+  .populate('pedais.pedalId')
+  .populate('boards.boardId') 
+  .populate('usuario', 'nome email')
+  .select("+curtidas");
     const pedalboardsComEstilo = pedalboards.map(p => ({
       ...p.toObject(),
       estilo: Array.isArray(p.estilo) ? p.estilo : (p.estilo ? [p.estilo] : [])
     }));
-
     res.json({ pedalboards: pedalboardsComEstilo });
   } catch (err) {
     console.error(err);
@@ -416,27 +440,26 @@ app.get('/meus-pedalboards', autenticarToken, async (req, res) => {
   }
 });
 
-
-// Buscar todos os pedalboards (para pesquisa)
+// busca todos os pedalboards para pesquisa
 app.get("/pedalboards/search", autenticarToken, async (req, res) => {
   try {
     const q = req.query.q;
     if (!q) return res.status(400).json({ error: "Informe um termo de pesquisa" });
 
-    const pedalboards = await Pedalboard.find({
-      nome: { $regex: q, $options: "i" }
-    })
-      .populate("usuario", "nome email")
-      .populate("pedais")
-      .select("+curtidas"); // 👈 adiciona campo curtidas, caso ele esteja oculto
+const pedalboards = await Pedalboard.find({
+  nome: { $regex: q, $options: "i" }
+})
+  .populate("usuario", "nome email")
+  .populate("pedais.pedalId")
+  .populate("boards.boardId") 
+  .select("+curtidas"); 
 
     res.json(pedalboards);
   } catch (err) {
     res.status(500).json({ error: "Erro ao pesquisar pedalboards", detalhes: err.message });
   }
 });
-
-// PUT /pedalboards/:id - Atualiza pedalboard com ou sem nova imagem
+// atualiza o pedalboard
 app.put('/pedalboards/:id', autenticarToken, uploadFields, async (req, res) => {
   const { id } = req.params;
   let { nome, artista, descricao, pedais, boards, annotations, estilo } = req.body;
@@ -449,37 +472,32 @@ app.put('/pedalboards/:id', autenticarToken, uploadFields, async (req, res) => {
       return res.status(403).json({ error: "Não autorizado" });
     }
 
-    // Atualiza campos principais
     pedalboard.nome = nome || pedalboard.nome;
     pedalboard.artista = artista || pedalboard.artista;
     pedalboard.descricao = descricao || pedalboard.descricao;
 
-    // 🔹 Garante que estilo seja sempre array
     if (estilo) {
       pedalboard.estilo = Array.isArray(estilo) ? estilo : JSON.parse(estilo);
     }
 
-    // Atualiza imagens principais
-    if (req.files?.imagem) pedalboard.imagem = `/uploads/${req.files.imagem[0].filename}`;
+    if (req.files?.imagem) pedalboard.imagem = req.files.imagem[0].path;
     else if (req.body.imagem) pedalboard.imagem = req.body.imagem;
 
-    if (req.files?.imagemCard) pedalboard.imagemCard = `/uploads/${req.files.imagemCard[0].filename}`;
+    if (req.files?.imagemCard) pedalboard.imagemCard = req.files.imagemCard[0].path;
     else if (req.body.imagemCard) pedalboard.imagemCard = req.body.imagemCard;
 
-    if (req.files?.fundo) pedalboard.fundo = `/uploads/${req.files.fundo[0].filename}`;
+   if (req.files?.fundo) pedalboard.fundo = req.files.fundo[0].path;
     else if (req.body.fundo) pedalboard.fundo = req.body.fundo;
 
-    // Parse JSON caso pedais/boards venham como string
     if (pedais && typeof pedais === 'string') pedais = JSON.parse(pedais);
     if (boards && typeof boards === 'string') boards = JSON.parse(boards);
 
-    // Reconstrói array de pedais (com spec)
     if (Array.isArray(pedais)) {
       pedalboard.pedais = pedais.map(p => {
         const existing = p.id ? pedalboard.pedais.id(p.id) : null;
         return {
           pedalId: existing?.pedalId || p.pedalId || undefined,
-          src: existing?.src || p.src || '/uploads/imagem-placeholder.png',
+          src: existing?.src || p.src || p.src || placeholder,
           x: p.x || 0,
           y: p.y || 0,
           rotation: p.rotation || 0,
@@ -491,13 +509,12 @@ app.put('/pedalboards/:id', autenticarToken, uploadFields, async (req, res) => {
       });
     }
 
-    // Reconstrói array de boards
     if (Array.isArray(boards)) {
       pedalboard.boards = boards.map(b => {
         const existingB = b.id ? pedalboard.boards.id(b.id) : null;
         return {
           boardId: existingB?.boardId || b.boardId || undefined,
-          src: existingB?.src || b.src || '/uploads/imagem-placeholder.png',
+         src: existingB?.src || b.src || placeholder, 
           x: b.x || 0,
           y: b.y || 0,
           rotation: b.rotation || 0,
@@ -508,7 +525,6 @@ app.put('/pedalboards/:id', autenticarToken, uploadFields, async (req, res) => {
       });
     }
 
-    // Atualiza anotações
     if (annotations) {
       pedalboard.annotations = typeof annotations === 'string' ? JSON.parse(annotations) : annotations;
     }
@@ -522,14 +538,13 @@ app.put('/pedalboards/:id', autenticarToken, uploadFields, async (req, res) => {
   }
 });
 
-// Listar todos os pedalboards de todos os usuários
 app.get('/todos-pedalboards', autenticarToken, async (req, res) => {
   try {
-    const pedalboards = await Pedalboard.find()
-      .populate('pedais')
-      .populate('usuario', 'nome email');
-
-    // 👇 Inclui o campo estilo (caso não exista, retorna null)
+   const pedalboards = await Pedalboard.find()
+  .populate('pedais.pedalId')
+  .populate('boards.boardId') 
+  .populate('usuario', 'nome email');
+  
     res.json({ 
       pedalboards: pedalboards.map(p => ({
         ...p.toObject(),
@@ -548,7 +563,6 @@ app.get('/todos-pedalboards', autenticarToken, async (req, res) => {
 
 app.patch('/pedalboards/:id/verificar', autenticarToken, async (req, res) => {
   try {
-    // Checa se o usuário logado está na lista de verificadores
     if (!usuariosVerificadores.includes(req.usuario.id)) {
       return res.status(403).json({ error: "Você não tem permissão para verificar este pedalboard" });
     }
@@ -576,7 +590,6 @@ app.patch('/pedalboards/:id', autenticarToken, async (req, res) => {
     if (req.body.nome) pedalboard.nome = req.body.nome;
     if (req.body.descricao) pedalboard.descricao = req.body.descricao;
 
-    // 🔹 Garante que estilo seja sempre array
     if (req.body.estilo) {
       pedalboard.estilo = Array.isArray(req.body.estilo) ? req.body.estilo : JSON.parse(req.body.estilo);
     }
@@ -589,25 +602,20 @@ app.patch('/pedalboards/:id', autenticarToken, async (req, res) => {
   }
 });
 
-// DELETE /pedalboards/:id → excluir pedalboard
+// excluir pedalboard
 app.delete('/pedalboards/:id', autenticarToken, async (req, res) => {
   const id = req.params.id;
   const userId = req.usuario.id;
 
   try {
-    // busca pelo pedalboard
     const pedalboard = await Pedalboard.findById(id);
 
     if (!pedalboard) {
       return res.status(404).json({ error: "Pedalboard não encontrado" });
     }
-
-    // garante que o usuário dono é o mesmo logado
     if (pedalboard.usuario.toString() !== userId) {
       return res.status(403).json({ error: "Não autorizado" });
     }
-
-    // exclui o pedalboard
     await Pedalboard.findByIdAndDelete(id);
 
     res.json({ message: "Pedalboard excluído com sucesso" });
@@ -619,85 +627,63 @@ app.delete('/pedalboards/:id', autenticarToken, async (req, res) => {
 app.get('/pedalboards/:id', autenticarToken, async (req, res) => {
   try {
     const pedalboard = await Pedalboard.findById(req.params.id)
-      .populate('usuario', 'nome email') 
+      .populate('usuario', 'nome email')
       .populate('pedais.pedalId', 'imagem nome widthCm heightCm')
       .populate('boards.boardId', 'imagem nome widthCm heightCm');
 
     if (!pedalboard) return res.status(404).json({ error: "Pedalboard não encontrado" });
 
-const pedais = (pedalboard.pedais || []).map(p => ({
-  id: p._id.toString(),
-  pedalId: p.pedalId?._id?.toString() || undefined,
-  src: p.pedalId?.imagem || p.src || '/uploads/imagem-placeholder.png',
-  x: p.x || 0,
-  y: p.y || 0,
-  rotation: p.rotation || 0,
-  zIndex: p.zIndex || 10,
-  widthCm: p.pedalId?.widthCm || p.widthCm || 8,
-  heightCm: p.pedalId?.heightCm || p.heightCm || 8,
-  spec: p.spec || '' // 👈 adiciona aqui
-}));
-
-    const boards = (pedalboard.boards || []).map(b => ({
-      id: b._id.toString(),
-      boardId: b.boardId?._id?.toString() || undefined,
-      src: b.boardId?.imagem || b.src || '/uploads/imagem-placeholder.png',
-      x: b.x || 0,
-      y: b.y || 0,
-      rotation: b.rotation || 0,
-      zIndex: b.zIndex || 10,
-      widthCm: b.boardId?.widthCm || b.widthCm || 30,  // exemplo default board
-      heightCm: b.boardId?.heightCm || b.heightCm || 30
+    const pedais = (pedalboard.pedais || []).map(p => ({
+      id: p._id.toString(),
+      pedalId: p.pedalId?._id?.toString() || undefined,
+      src: p.pedalId?.imagem || p.src || 'https://placehold.co/200x200?text=Sem+Imagem',
+      x: p.x || 0,
+      y: p.y || 0,
+      rotation: p.rotation || 0,
+      zIndex: p.zIndex || 10,
+      widthCm: p.pedalId?.widthCm || p.widthCm || 8,
+      heightCm: p.pedalId?.heightCm || p.heightCm || 8,
+      spec: p.spec || ''
     }));
 
-res.json({
-  id: pedalboard._id.toString(),
-  nome: pedalboard.nome,
-  artista: pedalboard.artista,
-  descricao: pedalboard.descricao,
-  estilo: Array.isArray(pedalboard.estilo) ? pedalboard.estilo : [pedalboard.estilo || "Outro"], // <-- adiciona aqui
-  categorias: pedalboard.categorias || [],
-  pedais,
-  boards,
-  imagem: pedalboard.imagem || '/uploads/imagem-placeholder.png',
-  imagemCard: pedalboard.imagemCard || null,
-  fundo: pedalboard.fundo || null,
-  annotations: pedalboard.annotations || [],
-  usuario: {
-    id: pedalboard.usuario?._id || null,
-    nome: pedalboard.usuario?.nome || "Desconhecido"
-  }
-});
+const boards = (pedalboard.boards || []).map(b => ({
+  id: b._id.toString(),
+  boardId: b.boardId?._id?.toString() || undefined,
+  nome: b.boardId?.nome || "Sem nome",
+  src: b.boardId?.imagem || b.src || 'https://placehold.co/300x300?text=Sem+Imagem',
+  x: b.x || 0,
+  y: b.y || 0,
+  rotation: b.rotation || 0,
+  zIndex: b.zIndex || 10,
+  widthCm: b.boardId?.widthCm || b.widthCm || 30,
+  heightCm: b.boardId?.heightCm || b.heightCm || 30
+}));
+
+    res.json({
+      id: pedalboard._id.toString(),
+      nome: pedalboard.nome,
+      artista: pedalboard.artista,
+      descricao: pedalboard.descricao,
+      estilo: Array.isArray(pedalboard.estilo) ? pedalboard.estilo : [pedalboard.estilo || "Outro"],
+      categorias: pedalboard.categorias || [],
+      pedais,
+      boards,
+      imagem: pedalboard.imagem || 'https://placehold.co/400x400?text=Sem+Imagem',
+      imagemCard: pedalboard.imagemCard || null,
+      fundo: pedalboard.fundo || null,
+      annotations: pedalboard.annotations || [],
+      usuario: {
+        id: pedalboard.usuario?._id || null,
+        nome: pedalboard.usuario?.nome || "Desconhecido"
+      }
+    });
 
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erro ao buscar pedalboard", detalhes: err.message });
   }
 });
-app.get('/pedalboards', autenticarToken, async (req, res) => {
-  try {
-    const pedalboards = await Pedalboard.find()
-      .populate('pedais')
-      .populate('usuario', 'nome email')
-      .select("+estilo"); // 👈 garante que o campo estilo seja incluído mesmo se tiver select:false no schema
-
-    res.json({
-      pedalboards: pedalboards.map(p => ({
-        ...p.toObject(),
-      estilo: Array.isArray(p.estilo) ? p.estilo : (p.estilo ? [p.estilo] : [])
-      }))
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Erro ao buscar pedalboards",
-      detalhes: err.message
-    });
-  }
-});
-
-// DUPLICAR PEDALBOARD
+// duplica pedalboard
 app.post("/pedalboards/duplicar/:id", autenticarToken, async (req, res) => { 
   try {
     const userId = req.usuario.id;
@@ -715,30 +701,34 @@ app.post("/pedalboards/duplicar/:id", autenticarToken, async (req, res) => {
       descricao: original.descricao,
       estilo: Array.isArray(original.estilo) ? original.estilo : (original.estilo ? [original.estilo] : []),
       usuario: userId,
-      pedais: original.pedais.map(p => ({
-        pedalId: p.pedalId._id,
-        x: p.x,
-        y: p.y,
-        rotation: p.rotation,
-        zIndex: p.zIndex,
-        widthCm: p.widthCm,
-        heightCm: p.heightCm,
-        src: p.src
-      })),
-      boards: original.boards.map(b => ({
-        boardId: b.boardId._id,
-        x: b.x,
-        y: b.y,
-        rotation: b.rotation,
-        zIndex: b.zIndex,
-        widthCm: b.widthCm,
-        heightCm: b.heightCm,
-        src: b.src
-      })),
+      pedais: original.pedais
+        .filter(p => p.pedalId) 
+        .map(p => ({
+          pedalId: p.pedalId._id,
+          x: p.x,
+          y: p.y,
+          rotation: p.rotation,
+          zIndex: p.zIndex,
+          widthCm: p.widthCm,
+          heightCm: p.heightCm,
+          src: p.src
+        })),
+      boards: original.boards
+        .filter(b => b.boardId) 
+        .map(b => ({
+          boardId: b.boardId._id,
+          x: b.x,
+          y: b.y,
+          rotation: b.rotation,
+          zIndex: b.zIndex,
+          widthCm: b.widthCm,
+          heightCm: b.heightCm,
+          src: b.src
+        })),
       imagem: original.imagem,
       imagemCard: original.imagemCard || null,
       fundo: original.fundo || null,
-      annotations: original.annotations || [] // ← copiando as annotations
+      annotations: original.annotations || []
     });
 
     await clone.save();
@@ -748,11 +738,11 @@ app.post("/pedalboards/duplicar/:id", autenticarToken, async (req, res) => {
       novoId: clone._id
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Erro ao adicionar pedalboard." });
+    console.error("Erro ao duplicar pedalboard:", err);
+    res.status(500).json({ message: "Erro ao adicionar pedalboard.", detalhes: err.message });
   }
 });
-// Curtir / Descurtir pedalboard
+// curtir / descurtir
 app.post("/pedalboards/:id/curtir", autenticarToken, async (req, res) => {
   try {
     const userId = req.usuario.id;
@@ -783,24 +773,20 @@ app.post("/pedalboards/:id/curtir", autenticarToken, async (req, res) => {
 });
 
 app.post('/pedalboards/upload-card', autenticarToken, upload.single('imagemCard'), (req, res) => {
-    if (!req.file) return res.status(400).json({ erro: "Nenhuma imagem enviada" });
-    res.json({ mensagem: "Imagem do card enviada!", path: `/uploads/${req.file.filename}` });
+  if (!req.file) return res.status(400).json({ erro: "Nenhuma imagem enviada" });
+  res.json({ mensagem: "Imagem do card enviada!", path: req.file.path });
 });
-// Curtir pedalboard
 
-// Listar pedalboards curtidos por um usuário
 app.get("/pedalboards/curtidos/:userId", autenticarToken, async (req, res) => {
   try {
     const { userId } = req.params;
-
-    // busca pedalboards onde o array "likes" contém o ID do usuário
     const pedalboardsCurtidos = await Pedalboard.find({ likes: userId })
       .populate("usuario", "nome email")
       .populate("pedais.pedalId", "nome imagem")
-      .select("nome artista imagem imagemCard likes verified"); // <-- adicionei verified
+      .select("nome artista imagem imagemCard likes verified"); 
 
     if (!pedalboardsCurtidos.length) {
-      return res.status(200).json([]); // retorna vazio se o usuário não curtiu nada
+      return res.status(200).json([]);
     }
 
     res.status(200).json(pedalboardsCurtidos);
@@ -809,18 +795,14 @@ app.get("/pedalboards/curtidos/:userId", autenticarToken, async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar pedalboards curtidos", detalhes: err.message });
   }
 });
-// GET /pedalboards/sugeridos/:userId
-// GET /pedalboards/sugeridos/:userId
+//campo para atualizações futuras ainda nao usado, mostra pedalboards que o usuario "talvez goste", visando o gosto dos pedalboards.
 app.get('/pedalboards/sugeridos/:userId', autenticarToken, async (req, res) => {
   try {
     const userId = req.params.userId;
-
-    // 1️⃣ Busca todos os pedalboards curtidos pelo usuário
     const curtidos = await Pedalboard.find({ likes: userId });
 
     if (!curtidos.length) return res.json([]);
 
-    // 2️⃣ Coletar informações do usuário
     const pedaisCurtidos = new Set();
     let verifiedCurtidos = false;
     const palavrasTitulo = [];
@@ -830,22 +812,13 @@ app.get('/pedalboards/sugeridos/:userId', autenticarToken, async (req, res) => {
       if (p.verified) verifiedCurtidos = true;
       palavrasTitulo.push(...p.nome.toLowerCase().split(/\s+/));
     });
-
-    // 3️⃣ Buscar possíveis sugestões (excluindo já curtidos)
     const candidatos = await Pedalboard.find({ _id: { $nin: curtidos.map(p => p._id) } });
-
-    // 4️⃣ Calcular pontuação de relevância
     const sugeridos = candidatos.map(board => {
       let score = 0;
-
-      // Pedais em comum → +5 pontos cada
       const pedaisComuns = board.pedais.filter(p => pedaisCurtidos.has(p.pedalId.toString()));
       score += pedaisComuns.length * 5;
-
-      // Verificado → +3 pontos se usuário curtiu algum verificado
       if (verifiedCurtidos && board.verified) score += 3;
 
-      // Palavras do título → +1 ponto por palavra em comum
       const palavrasBoard = board.nome.toLowerCase().split(/\s+/);
       const palavrasComuns = palavrasBoard.filter(p => palavrasTitulo.includes(p));
       score += palavrasComuns.length;
@@ -853,11 +826,10 @@ app.get('/pedalboards/sugeridos/:userId', autenticarToken, async (req, res) => {
       return { board, score };
     });
 
-    // 5️⃣ Filtrar apenas os que têm score > 0 e ordenar por pontuação
     const final = sugeridos
       .filter(s => s.score > 0)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 20) // limite de 20 sugestões
+      .slice(0, 20) 
       .map(s => s.board);
 
     res.json(final);
@@ -867,33 +839,30 @@ app.get('/pedalboards/sugeridos/:userId', autenticarToken, async (req, res) => {
   }
 });
 
-// ------------------------ Pedais ------------------------
 
-// Criar Pedal
+
+// ------------------------ PEDAIS ------------------------
+
+// criar pedal
 app.post('/pedais', autenticarToken, upload.single('imagem'), async (req, res) => {
   try {
-    const { nome, descricao, categoria, widthCm, heightCm } = req.body;
-
-    // 🧩 Ajuste 1: também aceitar imagem via URL (quando o front não envia arquivo)
-    const imagem = req.file
-      ? `/uploads/${req.file.filename}`
-      : req.body.imagem || null;
+    const { nome, descricao, categoria, widthCm, heightCm, imagem: imagemUrl } = req.body;
+    const imagem = req.file ? req.file.path : imagemUrl || null;
 
     if (!nome || !imagem) {
       return res.status(400).json({ erro: "Nome e imagem são obrigatórios." });
     }
 
-    // 🧩 Ajuste 2: garantir que widthCm e heightCm sejam números válidos
     const parsedWidth = parseFloat(widthCm);
     const parsedHeight = parseFloat(heightCm);
 
     const novoPedal = new Pedal({
       nome,
-      descricao,
-      imagem,
-      categoria,
-      widthCm: !isNaN(parsedWidth) ? parsedWidth : 8,  // valor padrão se não vier
+      descricao: descricao || "",
+      categoria: categoria || "outros",
+      widthCm: !isNaN(parsedWidth) ? parsedWidth : 8,
       heightCm: !isNaN(parsedHeight) ? parsedHeight : 8,
+      imagem, 
       usuarioId: req.usuario.id
     });
 
@@ -912,22 +881,19 @@ app.post('/pedais', autenticarToken, upload.single('imagem'), async (req, res) =
     });
   }
 });
-
-
-// Listar todos os pedais do usuário logado
+// lista os pedais do usuario
 app.get('/pedais', autenticarToken, async (req, res) => {
   try {
-    const pedais = await Pedal.find({ usuarioId: req.usuario.id });
+    const pedais = await Pedal.find({ usuarioId: req.usuario.id }).sort({ createdAt: -1 });
 
-    // 🔧 Garante que todos os pedais tenham widthCm e heightCm válidos (nunca undefined)
     const pedaisComDimensoes = pedais.map(p => ({
       _id: p._id,
       nome: p.nome,
-      descricao: p.descricao,
-      imagem: p.imagem,
-      categoria: p.categoria,
+      descricao: p.descricao || "",
+      imagem: p.imagem, 
+      categoria: p.categoria || "outros",
       usuarioId: p.usuarioId,
-      widthCm: p.widthCm || 8,   // valor padrão caso não venha do banco
+      widthCm: p.widthCm || 8,
       heightCm: p.heightCm || 8,
       createdAt: p.createdAt
     }));
@@ -939,10 +905,7 @@ app.get('/pedais', autenticarToken, async (req, res) => {
   }
 });
 
-
-// Listar pedais de um pedalboard específico
-
-// Remover pedal de um pedalboard
+// deletar pedal de um pedalboard
 app.delete('/pedalboards/:pedalboardId/pedais/:pedalId', autenticarToken, async (req, res) => {
   const { pedalboardId, pedalId } = req.params;
 
@@ -969,7 +932,7 @@ app.get("/pedalboards/estilo/:estilo", async (req, res) => {
   }
 });
 
-// Verificar Pedal
+// verificar pedal
 app.patch('/pedais/:id/verificar', autenticarToken, async (req, res) => {
   try {
     if (!usuariosVerificadores.includes(req.usuario.id)) {
@@ -986,7 +949,7 @@ app.patch('/pedais/:id/verificar', autenticarToken, async (req, res) => {
   }
 });
 
-// Deletar pedal
+// deletar pedal
 app.delete('/pedais/:id', autenticarToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -1002,18 +965,23 @@ app.delete('/pedais/:id', autenticarToken, async (req, res) => {
     res.status(500).json({ error: "Erro ao excluir pedal", detalhes: err.message });
   }
 });
-// Buscar pedais de todos os usuários (com filtro opcional por nome)
+// buscar pedais de todos os usuários 
 app.get("/pedais/todos", autenticarToken, async (req, res) => {
   try {
     const search = req.query.search ? req.query.search.trim() : "";
 
-    // Busca pedais por nome (case-insensitive)
+    // filtro de pesquisa (categoria/nome)
     const filtro = search
-      ? { nome: { $regex: search, $options: "i" } }
+      ? {
+          $or: [
+            { nome: { $regex: search, $options: "i" } },
+            { categoria: { $regex: search, $options: "i" } },
+          ],
+        }
       : {};
 
     const pedais = await Pedal.find(filtro)
-      .populate("usuarioId", "nome email") // para mostrar o criador
+      .populate("usuarioId", "nome email")
       .sort({ createdAt: -1 });
 
     res.json(pedais);
@@ -1022,18 +990,16 @@ app.get("/pedais/todos", autenticarToken, async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar pedais", detalhes: err.message });
   }
 });
-
-// Copiar um pedal existente para a biblioteca do usuário logado
+// pedal existente vai para biblioteca do usuario
 app.post("/pedais/copiar/:id", autenticarToken, async (req, res) => {
   try {
     const pedalOriginal = await Pedal.findById(req.params.id);
     if (!pedalOriginal) return res.status(404).json({ error: "Pedal não encontrado" });
 
-    // Cria uma cópia associada ao novo usuário
     const novoPedal = new Pedal({
       nome: pedalOriginal.nome,
       descricao: pedalOriginal.descricao,
-      imagem: pedalOriginal.imagem,
+      imagem: pedalOriginal.imagem, 
       categoria: pedalOriginal.categoria,
       widthCm: pedalOriginal.widthCm || 8,
       heightCm: pedalOriginal.heightCm || 8,
@@ -1049,8 +1015,7 @@ app.post("/pedais/copiar/:id", autenticarToken, async (req, res) => {
 });
 app.get('/pedais/:id', autenticarToken, async (req, res) => {
   try {
-    const pedal = await Pedal.findById(req.params.id); // sem filtro por usuarioId
-
+    const pedal = await Pedal.findById(req.params.id);
     if (!pedal) {
       return res.status(404).json({ error: "Pedal não encontrado" });
     }
@@ -1059,7 +1024,7 @@ app.get('/pedais/:id', autenticarToken, async (req, res) => {
       _id: pedal._id,
       nome: pedal.nome,
       categoria: pedal.categoria,
-      imagem: pedal.imagem,
+      imagem: pedal.imagem, 
       descricao: pedal.descricao,
       widthCm: pedal.widthCm || 8,
       heightCm: pedal.heightCm || 8
@@ -1074,22 +1039,21 @@ app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Nenhum arquivo enviado' });
   }
-
-  // Caminho que vamos salvar no banco
-  const filePath = `/uploads/${req.file.filename}`;
-
-  res.json({ src: filePath });
+  res.json({ src: req.file.path });
 });
 
-// ------------------------ Conexão MongoDB ------------------------
+app.post("/test-upload", upload.single("imagem"), (req, res) => {
+  res.json({ url: req.file.path });
+});
 
-const uri = "mongodb+srv://jbinotto36_db_user:a1b2c3@meupedalboardcluster.rliwxam.mongodb.net/meuPedalboardDB?retryWrites=true&w=majority";
-mongoose.connect(uri)
-  .then(() => console.log('MongoDB conectado com sucesso!'))
-  .catch(err => console.log('Erro ao conectar MongoDB:', err));
+// ------------------------ CONEXAO COM O MongoDB ------------------------
 
-// Rota de teste
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ MongoDB conectado com sucesso!'))
+  .catch(err => console.error('❌ Erro ao conectar MongoDB:', err));
+
+// teste
 app.get('/', (req, res) => res.send('Servidor rodando!'));
 
-// Rodar servidor
-app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
+// rodar servidor
+app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
